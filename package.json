@@ -1,0 +1,11 @@
+{
+  "name": "Raindar",
+  "version": "1.9.1",
+  "description": "Raindar",
+  "author": "Mario Ferraro",
+  "license": "GPLv3",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-bower-task": "~0.2.3"
+  }
+}

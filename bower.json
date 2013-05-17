@@ -1,0 +1,8 @@
+{
+  "name": "Raindar",
+  "version": "1.9.1",
+  "dependencies": {
+    "jquery": "~2.0.0"
+  },
+  "devDependencies": {}
+}
