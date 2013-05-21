@@ -67,13 +67,14 @@ html, body {
   background: -ms-linear-gradient(270deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   background: linear-gradient(0deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   border-bottom: 1px solid #D2D1CF;
-  line-height: 1.5em;
   font-family: 'Arvo', serif;
   font-size: 1.5em;
   opacity: 0.8;
   position: absolute;
+  text-align: center;
   z-index: 1;
   width: 100%;
+  white-space: nowrap;
 }
 
 #playback-bar {
@@ -91,20 +92,28 @@ html, body {
   width: 100%;
 }
 
+#info-wind-speed-wrapper {
+  display: inline-block;
+}
+
 #info-wind-speed {
   background-image: url(assets/retina/windspeed-indicator.png);
   background-position: left center;
   background-repeat: no-repeat;
   display: table;
-  float: left;
-  margin-left: 1%;
   min-height: 80px;
-  padding-left: 70px;
+  padding-left: 60px;
 }
 
 #info-wind-speed .info-wind-speed-text {
   display: table-cell;
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+#info-precipitation-chance-wrapper {
+  display: inline-block;
+  margin-left: 3%;
 }
 
 #info-precipitation-chance {
@@ -112,15 +121,19 @@ html, body {
   background-position: left center;
   background-repeat: no-repeat;
   display: table;
-  float: left;
-  margin-left: 3%;
   min-height: 80px;
-  padding-left: 70px;
+  padding-left: 50px;
 }
 
 #info-precipitation-chance .info-precipitation-chance-text {
   display: table-cell;
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+#info-temperature-wrapper {
+  display: inline-block;
+  margin-left: 3%;
 }
 
 #info-temperature {
@@ -128,15 +141,19 @@ html, body {
   background-position: left center;
   background-repeat: no-repeat;
   display: table;
-  float: left;
-  margin-left: 3%;
   min-height: 80px;
-  padding-left: 70px;
+  padding-left: 45px;
 }
 
 #info-temperature .info-temperature-text {
   display: table-cell;
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+#button-change-map-view-wrapper {
+  display: inline-block;
+  margin-left: 3%;
 }
 
 #button-change-map-view.map {
@@ -144,8 +161,6 @@ html, body {
   background-position: left center;
   background-repeat: no-repeat;
   display: table;
-  float: left;
-  margin-left: 3%;
   min-height: 80px;
   padding-left: 146px;
 }
@@ -155,7 +170,6 @@ html, body {
   background-position: left center;
   background-repeat: no-repeat;
   display: table;
-  float: left;
   margin-left: 3%;
   min-height: 80px;
   padding-left: 146px;
@@ -163,7 +177,8 @@ html, body {
 
 @media screen and (min-width: 640px) {
   #menu-bar {
-    margin-left: 60%;
+    float: right;
+    position: relative;
     width: 40%;
   }
 
