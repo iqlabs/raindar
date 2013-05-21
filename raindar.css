@@ -123,6 +123,22 @@ html, body {
   vertical-align: middle;
 }
 
+#info-temperature {
+  background-image: url(assets/retina/temperature-icon.png);
+  background-position: left center;
+  background-repeat: no-repeat;
+  display: table;
+  float: left;
+  margin-left: 3%;
+  min-height: 80px;
+  padding-left: 70px;
+}
+
+#info-temperature .info-temperature-text {
+  display: table-cell;
+  vertical-align: middle;
+}
+
 
 @media screen and (min-width: 640px) {
   #menu-bar {
