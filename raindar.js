@@ -96,7 +96,7 @@ var raindar = function () {
       }
       catch(e) {}
       map.addLayer(radarLayers[counter]);
-      jQuery('span.time').html(times[counter]);
+      //jQuery('span.time').html(times[counter]);
       if (counter === radarLayers.length-1) {
         clearInterval(interval);
       }
