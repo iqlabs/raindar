@@ -104,7 +104,7 @@ var raindar = function () {
         counter++;
       }
     }
-  ,1000)
+  ,300)
 
     }
   );
