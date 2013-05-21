@@ -17,8 +17,8 @@ var raindar = function () {
   var gmap_street = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
   var gmap_satellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
 
-  map.addLayer(gmap_satellite);
   map.addLayer(gmap_street);
+  map.addLayer(gmap_satellite);
   map.addLayer(gmap_hybrid);
   map.addLayer(gmap_physical);
   map.addLayer(backgroundlayer);
