@@ -179,14 +179,16 @@ html, body {
   #menu-bar {
     float: right;
     position: relative;
-    width: 30em;
+    max-width: 30em;
     min-width: 24em;
+    width: 30em;
   }
 
   #playback-bar {
     float: left;
-    width: 30em;
+    max-width: 30em;
     min-width: 24em;
+    width: 30em;
     top: 0;
   }
 }
