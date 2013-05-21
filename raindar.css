@@ -175,11 +175,12 @@ html, body {
   padding-left: 146px;
 }
 
-@media screen and (min-width: 640px) {
+@media screen and (min-width: 960px) {
   #menu-bar {
     float: right;
     position: relative;
     width: 40%;
+    min-width: 24em;
   }
 
   #playback-bar {
