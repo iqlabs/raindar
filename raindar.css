@@ -105,3 +105,16 @@ html, body {
   display: table-cell;
   vertical-align: middle;
 }
+
+@media screen and (min-width: 640px) {
+  #menu-bar {
+    margin-left: 60%;
+    width: 40%;
+  }
+
+  #playback-bar {
+    float: left;
+    width: 40%;
+    top: 0;
+  }
+}
