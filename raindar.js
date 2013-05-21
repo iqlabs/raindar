@@ -26,7 +26,7 @@ var raindar = function () {
 
   //Center the Map over the UK
   map.setCenter(
-    new OpenLayers.LonLat(-7.5, 53).transform(
+    new OpenLayers.LonLat(-7.5, 53.5).transform(
       new OpenLayers.Projection("EPSG:4326"),
       map.getProjectionObject()
     ),
