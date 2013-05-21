@@ -125,6 +125,19 @@ html, body {
   white-space: nowrap;
 }
 
+#button-about-wrapper {
+  display: inline-block;
+}
+
+#button-about {
+  background-image: url(assets/retina/_info-icon.png);
+  background-position: left center;
+  background-repeat: no-repeat;
+  display: table;
+  min-height: 80px;
+  padding-left: 55px;
+}
+
 #info-wind-speed-wrapper {
   display: inline-block;
 }
