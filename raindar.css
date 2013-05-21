@@ -59,7 +59,7 @@ html, body {
   position: relative;
 }
 
-#top-bar {
+#menu-bar {
   background: rgb(218, 218, 218);
   background: -moz-linear-gradient(270deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   background: -webkit-linear-gradient(270deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
@@ -74,7 +74,7 @@ html, body {
   width: 100%;
 }
 
-#bottom-bar {
+#playback-bar {
   background: rgb(218, 218, 218);
   background: -moz-linear-gradient(270deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   background: -webkit-linear-gradient(270deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
