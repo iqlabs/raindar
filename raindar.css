@@ -105,7 +105,24 @@ html, body {
   background-repeat: no-repeat;
   display: table;
   min-height: 80px;
-  padding-left: 60px;
+  padding-left: 55px;
+}
+
+#info-location-time-wrapper {
+  display: inline-block;
+}
+
+#info-location-time {
+  display: table;
+  min-height: 80px;
+  padding-left: 10px;
+}
+
+#info-location-time .info-location-time-text {
+  display: table-cell;
+  padding-right: 10px;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 #info-wind-speed-wrapper {
