@@ -2,26 +2,17 @@ var raindar = function () {
 
   //Use OpenStreetMap as the background maping layer
   var map = new OpenLayers.Map('map'),
-    backgroundlayer,
     bounds,
     projection,
     layerSize,
     satelliteLayer,
     radarLayer;
 
-  backgroundlayer = new OpenLayers.Layer.OSM("OpenStreetMap");
-  var gmap_hybrid = new OpenLayers.Layer.Google("Google Hybrid",
-    {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
-  var gmap_physical = new OpenLayers.Layer.Google("Google Physical",
-    {type: google.maps.MapTypeId.TERRAIN});
   var gmap_street = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
   var gmap_satellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
 
   map.addLayer(gmap_street);
   map.addLayer(gmap_satellite);
-  map.addLayer(gmap_hybrid);
-  map.addLayer(gmap_physical);
-  map.addLayer(backgroundlayer);
   map.addControl(new OpenLayers.Control.LayerSwitcher());
 
   //Center the Map over the UK
