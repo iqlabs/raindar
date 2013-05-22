@@ -1,5 +1,38 @@
 var raindar = function () {
   var _raindar = this;
+
+  // Get data from forecast.io
+  var forecastIOAPIKey = '931bb054da507e4747844db62accc6a5';
+  var forecastIOUrl = [
+    'https://api.forecast.io/forecast',
+    forecastIOAPIKey,
+    null
+  ];
+
+  var latitudeForecast = 53.3428;
+  var longitudeForecast = -6.2661;
+
+  forecastIOUrl[2] = [latitudeForecast,',',longitudeForecast].join('');
+
+  var forecastIOUrlString = forecastIOUrl.join('/') + '?units=si&exclude=daily,flags,hourly,minutely';
+
+  var loadingForecast =
+  jQuery.ajax(
+    {url: forecastIOUrlString, dataType:'jsonp'}
+  ).done(function(forecast_response) {
+    var currentConditions = forecast_response.currently;
+    var windBearing = currentConditions.windBearing;
+    var windSpeed = typeof currentConditions.windSpeed !== 'undefined' ? parseInt(currentConditions.windSpeed, 10) : '?';
+    var precipitationProbability = typeof currentConditions.precipProbability !== 'undefined' ? parseInt(currentConditions.precipProbability, 10) : '?';
+    var temperature = typeof currentConditions.temperature !== 'undefined' ? parseInt(currentConditions.temperature, 10) : '?';
+
+    jQuery('.info-wind-speed-text').html(windSpeed + ' km/h');
+    jQuery('.info-precipitation-chance-text').html(precipitationProbability + '%');
+    jQuery('.info-temperature-text').html(temperature + 'C');
+  });
+
+
+
   // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
   var centerCoordinates = [-7.5, 53.5];
   var defaultZoomLevel = 7;
