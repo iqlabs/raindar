@@ -72,15 +72,17 @@ var raindar = function () {
           layerSize,
           {isBaseLayer: false, opacity: 0.65}
         );
+        map.addLayer(radarLayers[index]);
+        radarLayers[index].setVisibility(false);
       });
-      map.addLayer(radarLayers[radarLayers.length - 1]);
+      radarLayers[radarLayers.length -1].setVisibility(true);
     }
   );
 
   jQuery('#button-play').on('click', function() {
     var counter = 0;
     var radarLayersLength = radarLayers.length;
-    map.removeLayer(radarLayers[radarLayersLength - 1]);
+    radarLayers[radarLayersLength - 1].setVisibility(false);
 
     var interval = setInterval(
       function() {
@@ -88,11 +90,8 @@ var raindar = function () {
         if (remove<0) {
           remove = radarLayersLength-1;
         }
-        try {
-          map.removeLayer(radarLayers[remove]);
-        }
-        catch(e) {}
-        map.addLayer(radarLayers[counter]);
+        radarLayers[remove].setVisibility(false);
+        radarLayers[counter].setVisibility(true);
         if (counter === radarLayersLength-1) {
           clearInterval(interval);
         }
