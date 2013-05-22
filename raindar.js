@@ -94,7 +94,7 @@ var raindar = function () {
       var radar = capabilities_json["Layers"]["Layer"][3];
       var radar_times = radar['Service']['Times']['Time'].reverse();
       jQuery.each(radar_times, function(index, time) {
-        times.push(time);
+        times.push(new Date(time));
         image_urls.push(url_template.slice());
         image_urls[index][1] = time;
         image_urls[index] = image_urls[index].join('');
@@ -109,6 +109,8 @@ var raindar = function () {
         radarLayers[index].setVisibility(false);
       });
       radarLayers[radarLayers.length -1].setVisibility(true);
+      jQuery('#info-location-time .time').html(timeString(times[radarLayers.length - 1]));
+      jQuery('#info-location-time .date').html(dateString(times[radarLayers.length - 1]));
     }
   );
 
@@ -125,6 +127,8 @@ var raindar = function () {
         }
         radarLayers[remove].setVisibility(false);
         radarLayers[counter].setVisibility(true);
+        jQuery('#info-location-time .time').html(timeString(times[counter]));
+        jQuery('#info-location-time .date').html(dateString(times[counter]));
         if (counter === radarLayersLength-1) {
           clearInterval(interval);
         }
@@ -135,5 +139,12 @@ var raindar = function () {
     );
   });
 
+  var timeString = function(input_date) {
+    return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
+  };
+
+  var dateString = function(input_date) {
+    return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
+  };
 };
 jQuery.ready(raindar());
