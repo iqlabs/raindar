@@ -1,51 +1,51 @@
 var raindar = function () {
+  // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
+  var centerCoordinates = [-7.5, 53.5];
+  var defaultZoomLevel = 7;
+  var projection = 'EPSG:4326';
 
-  //Use OpenStreetMap as the background maping layer
-  var map = new OpenLayers.Map('map'),
-    bounds,
-    projection,
-    layerSize,
-    satelliteLayer,
-    radarLayer;
+  var northWestBoundData = [-12.0, 48.0];
+  var southEastBoundData = [5.0, 61.0];
+  var widthImageData = 500;
+  var heightImageData = 500;
 
-  var gmap_street = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-  var gmap_satellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
+  var olProjection = new OpenLayers.Projection(projection);
+  var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
 
-  map.addLayer(gmap_street);
-  map.addLayer(gmap_satellite);
+  var metAPIKey = "c1d1b645-d1c4-4883-bfb4-2adb3c346f80";
+  var metCapabilitiesURL = "http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/all/json/capabilities?key=" + metAPIKey;
+
+  var map = new OpenLayers.Map('map');
+
+  var googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
+  var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
+
+  map.addLayer(googleMapsLayerStreet);
+  map.addLayer(googleMapsLayerSatellite);
+
   map.addControl(new OpenLayers.Control.LayerSwitcher());
 
-  //Center the Map over the UK
   map.setCenter(
-    new OpenLayers.LonLat(-7.5, 53.5).transform(
-      new OpenLayers.Projection("EPSG:4326"),
+    centerLonLat.transform(
+      olProjection,
       map.getProjectionObject()
     ),
-    7
+    defaultZoomLevel
   );
 
-  //Define the Datapoint layer bounding box
+  // Define the Datapoint layer bounding box
   // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
-  bounds = new OpenLayers.Bounds();
-  projection = new OpenLayers.Projection("EPSG:4326");
-  bounds.extend(new OpenLayers.LonLat(-12.0, 48.0).transform(projection, map.getProjectionObject()));
-  bounds.extend(new OpenLayers.LonLat(5.0, 61.0).transform(projection, map.getProjectionObject()));
+  var bounds = new OpenLayers.Bounds();
+  bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(olProjection, map.getProjectionObject()));
+  bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(olProjection, map.getProjectionObject()));
 
   // Get the Datapoint image
-  layerSize = new OpenLayers.Size(500, 500);
-
-  // Create the layers based on the Datapoint Image URLs, the bounding box and the Image size (500px x 500px)
-  // The application should first identify the available images by parsing the contents of the capabilities document
-  // for Rainfall Radar this would be the http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/all/xml/capabilities?key=<API key>
-  // This is a static example image as used in the documentation
-
-  var api_key = "c1d1b645-d1c4-4883-bfb4-2adb3c346f80";
-  var capabilities_url = "http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/all/json/capabilities?key=" + api_key;
+  var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
 
   var url_template = [
     'http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/RADAR_UK_Composite_Highres/png?TIME=',
     null,
-    'Z&key=c1d1b645-d1c4-4883-bfb4-2adb3c346f80'];
+    'Z&key=', metAPIKey];
 
   var times = [];
   var image_urls = [];
@@ -53,7 +53,7 @@ var raindar = function () {
 
   var loadingCapabilities =
   jQuery.ajax(
-    {url: capabilities_url, dataType:'jsonp'}
+    {url: metCapabilitiesURL, dataType:'jsonp'}
   )
   .done(
     function(capabilities_json) {
@@ -72,8 +72,6 @@ var raindar = function () {
           {isBaseLayer: false}
         );
       });
-  // Add the image layers to the map
-  /*map.addLayer(radarLayer);*/
   var counter = 0;
   var length = radarLayers.length;
   var interval = setInterval(
@@ -87,7 +85,6 @@ var raindar = function () {
       }
       catch(e) {}
       map.addLayer(radarLayers[counter]);
-      //jQuery('span.time').html(times[counter]);
       if (counter === radarLayers.length-1) {
         clearInterval(interval);
       }
@@ -99,15 +96,5 @@ var raindar = function () {
 
     }
   );
-
-  /*radarLayer = new OpenLayers.Layer.Image(
-    "Datapoint Composite Radar",
-    "http://www.metoffice.gov.uk/media/image/h/o/Radar_Composite.png",
-    bounds,
-    layerSize,
-    {isBaseLayer: false}
-  );*/
-
-
 };
 jQuery.ready(raindar());
