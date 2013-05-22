@@ -1,4 +1,5 @@
 var raindar = function () {
+  var _raindar = this;
   // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
   var centerCoordinates = [-7.5, 53.5];
   var defaultZoomLevel = 7;
@@ -72,29 +73,35 @@ var raindar = function () {
           {isBaseLayer: false}
         );
       });
-  var counter = 0;
-  var length = radarLayers.length;
-  var interval = setInterval(
-    function() {
-      var remove = counter - 1;
-      if (remove<0) {
-        remove = radarLayers.length-1;
-      }
-      try {
-        map.removeLayer(radarLayers[remove]);
-      }
-      catch(e) {}
-      map.addLayer(radarLayers[counter]);
-      if (counter === radarLayers.length-1) {
-        clearInterval(interval);
-      }
-      else {
-        counter++;
-      }
-    }
-  ,300)
-
+      map.addLayer(radarLayers[radarLayers.length - 1]);
     }
   );
+
+  jQuery('#button-play').on('click', function() {
+    var counter = 0;
+    var radarLayersLength = radarLayers.length;
+    map.removeLayer(radarLayers[radarLayersLength - 1]);
+
+    var interval = setInterval(
+      function() {
+        var remove = counter - 1;
+        if (remove<0) {
+          remove = radarLayersLength-1;
+        }
+        try {
+          map.removeLayer(radarLayers[remove]);
+        }
+        catch(e) {}
+        map.addLayer(radarLayers[counter]);
+        if (counter === radarLayersLength-1) {
+          clearInterval(interval);
+        }
+        else {
+          counter++;
+        }
+      }, 300
+    );
+  });
+
 };
 jQuery.ready(raindar());
