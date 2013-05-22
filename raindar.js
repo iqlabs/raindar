@@ -70,7 +70,7 @@ var raindar = function () {
           image_urls[index],
           bounds,
           layerSize,
-          {isBaseLayer: false}
+          {isBaseLayer: false, opacity: 0.65}
         );
       });
       map.addLayer(radarLayers[radarLayers.length - 1]);
