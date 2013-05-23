@@ -81,10 +81,6 @@ html, body {
   display: inline-block;
 }
 
-#menu-bar .wrapper {
-  width: 25%;
-}
-
 #menu-bar .text {
   margin-left: 5px;
   vertical-align: middle;
@@ -96,10 +92,18 @@ html, body {
   vertical-align: middle;
 }
 
+#info-wind-speed-wrapper {
+  width: 30%;
+}
+
 #info-wind-speed {
   background-image: url(assets/windspeed-indicator-up.png);
   height: 25px;
   width: 25px;
+}
+
+#info-precipitation-chance-wrapper {
+  width: 20%;
 }
 
 #info-precipitation-chance {
@@ -108,10 +112,18 @@ html, body {
   width: 22px;
 }
 
+#info-temperature-wrapper {
+  width: 20%;
+}
+
 #info-temperature {
   background-image: url(assets/temperature-icon.png);
   height: 22px;
   width: 22px;
+}
+
+#button-change-map-view-wrapper {
+  width: 30%;
 }
 
 #button-change-map-view.map {
@@ -171,6 +183,18 @@ html, body {
 
 .info-location-time-text.location, .info-location-time-text.date {
   font-size: 0.8em;
+}
+
+.info-location-time-text.location {
+  width: 50%;
+}
+
+.info-location-time-text.date {
+  width: 30%;
+}
+
+.info-location-time-text.time {
+  width: 20%;
 }
 
 #button-about {
