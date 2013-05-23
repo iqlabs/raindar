@@ -168,6 +168,10 @@ html, body {
   width: 22px;
 }
 
+.info-location-time-text.location, .info-location-time-text.date {
+  font-size: 0.8em;
+}
+
 #button-about {
   background-image: url(assets/_info-icon.png);
   height: 22px;
