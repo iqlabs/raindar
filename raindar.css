@@ -68,13 +68,61 @@ html, body {
   background: linear-gradient(0deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   border-bottom: 1px solid #D2D1CF;
   font-family: 'Arvo', serif;
-  font-size: 1.5em;
+  font-size: 1em;
   opacity: 0.8;
-  position: absolute;
+  padding: 5px;
   text-align: center;
   z-index: 1;
   width: 100%;
   white-space: nowrap;
+}
+
+#menu-bar * {
+  display: inline-block;
+}
+
+#menu-bar .wrapper {
+  width: 20%;
+}
+
+#menu-bar .text {
+  vertical-align: middle;
+}
+
+#menu-bar .image {
+  background-position: left center;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+#info-wind-speed {
+  background-image: url(assets/windspeed-indicator-up.png);
+  height: 25px;
+  width: 25px;
+}
+
+#info-precipitation-chance {
+  background-image: url(assets/raindar-icon.png);
+  height: 22px;
+  width: 22px;
+}
+
+#info-temperature {
+  background-image: url(assets/temperature-icon.png);
+  height: 22px;
+  width: 22px;
+}
+
+#button-change-map-view.map {
+  background-image: url(assets/toggle-map-on--satellite-off.png);
+  height: 33px;
+  width: 73px;
+}
+
+#button-change-map-view.satellite {
+  background-image: url(assets/toggle-map-off--satellite-on.png);
+  height: 33px;
+  width: 73px;
 }
 
 #playback-bar {
@@ -86,8 +134,9 @@ html, body {
   background: linear-gradient(0deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   bottom: 0;
   font-family: 'Arvo', serif;
-  font-size: 1.5em;
+  font-size: 1em;
   opacity: 0.8;
+  padding: 5px;
   position: absolute;
   text-align: center;
   z-index: 1;
@@ -95,146 +144,47 @@ html, body {
   white-space: nowrap;
 }
 
-#button-play-wrapper {
+#playback-bar * {
   display: inline-block;
+}
+
+#playback-bar .wrapper {
+  width: 33%;
+}
+
+#playback-bar .text {
+  vertical-align: middle;
+}
+
+#playback-bar .image {
+  background-position: left center;
+  background-repeat: no-repeat;
+  vertical-align: middle;
 }
 
 #button-play {
-  background-image: url(assets/retina/play-icon.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  min-height: 80px;
-  padding-left: 55px;
-}
-
-#info-location-time-wrapper {
-  display: inline-block;
-}
-
-#info-location-time {
-  display: table;
-  min-height: 80px;
-  padding-left: 10px;
-}
-
-#info-location-time .info-location-time-text {
-  display: table-cell;
-  padding-right: 10px;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-#button-about-wrapper {
-  display: inline-block;
+  background-image: url(assets/play-icon.png);
+  height: 22px;
+  width: 22px;
 }
 
 #button-about {
-  background-image: url(assets/retina/_info-icon.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  min-height: 80px;
-  padding-left: 55px;
+  background-image: url(assets/_info-icon.png);
+  height: 22px;
+  width: 22px;
 }
 
-#info-wind-speed-wrapper {
-  display: inline-block;
-}
-
-#info-wind-speed {
-  background-image: url(assets/retina/windspeed-indicator.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  min-height: 80px;
-  padding-left: 60px;
-}
-
-#info-wind-speed .info-wind-speed-text {
-  display: table-cell;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-#info-precipitation-chance-wrapper {
-  display: inline-block;
-  margin-left: 3%;
-}
-
-#info-precipitation-chance {
-  background-image: url(assets/retina/raindar-icon.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  min-height: 80px;
-  padding-left: 50px;
-}
-
-#info-precipitation-chance .info-precipitation-chance-text {
-  display: table-cell;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-#info-temperature-wrapper {
-  display: inline-block;
-  margin-left: 3%;
-}
-
-#info-temperature {
-  background-image: url(assets/retina/temperature-icon.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  min-height: 80px;
-  padding-left: 45px;
-}
-
-#info-temperature .info-temperature-text {
-  display: table-cell;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-#button-change-map-view-wrapper {
-  display: inline-block;
-  margin-left: 3%;
-}
-
-#button-change-map-view.map {
-  background-image: url(assets/retina/toggle-map-on--satellite-off.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  min-height: 80px;
-  padding-left: 146px;
-}
-
-#button-change-map-view.satellite {
-  background-image: url(assets/retina/toggle-map-off--satellite-on.png);
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: table;
-  margin-left: 3%;
-  min-height: 80px;
-  padding-left: 146px;
-}
-
-@media screen and (min-width: 90em) {
+@media screen and (min-width: 60em) {
   #menu-bar {
-    float: right;
-    position: relative;
-    max-width: 30em;
-    min-width: 24em;
-    width: 30em;
+    position: absolute;
+    right: 0;
+    width: 33%;
   }
 
   #playback-bar {
     bottom: auto;
+    position: absolute;
     float: left;
-    max-width: 30em;
-    min-width: 24em;
-    width: 30em;
+    width: 33%;
   }
 }

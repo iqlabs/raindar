@@ -28,7 +28,7 @@ var raindar = function () {
               }
             });
           }
-          jQuery('#info-location-time .location').html(currentCity);
+          jQuery('#info-location-time-wrapper .location').html(currentCity);
         });
         refreshData();
       },
@@ -47,7 +47,7 @@ var raindar = function () {
   }
 
   function refreshData() {
-    jQuery('#info-location-time .location').html(currentCity);
+    jQuery('#info-location-time-wrapper .location').html(currentCity);
 
     // Get data from forecast.io
     var forecastIOAPIKey = '931bb054da507e4747844db62accc6a5';
@@ -154,8 +154,8 @@ var raindar = function () {
           radarLayers[index].setVisibility(false);
         });
         radarLayers[radarLayers.length -1].setVisibility(true);
-        jQuery('#info-location-time .time').html(timeString(times[radarLayers.length - 1]));
-        jQuery('#info-location-time .date').html(dateString(times[radarLayers.length - 1]));
+        jQuery('#info-location-time-wrapper .time').html(timeString(times[radarLayers.length - 1]));
+        jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
       }
     );
 
@@ -172,8 +172,8 @@ var raindar = function () {
           }
           radarLayers[remove].setVisibility(false);
           radarLayers[counter].setVisibility(true);
-          jQuery('#info-location-time .time').html(timeString(times[counter]));
-          jQuery('#info-location-time .date').html(dateString(times[counter]));
+          jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
+          jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
           if (counter === radarLayersLength-1) {
             clearInterval(interval);
           }
