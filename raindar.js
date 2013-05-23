@@ -72,7 +72,8 @@ var raindar = function () {
       var precipitationProbability = typeof currentConditions.precipProbability !== 'undefined' ? parseInt(currentConditions.precipProbability, 10) : '?';
       var temperature = typeof currentConditions.temperature !== 'undefined' ? parseInt(currentConditions.temperature, 10) : '?';
 
-      currentConditions.windBearing = currentConditions.windBearing > 180 ? -(360 - currentConditions.windBearing) : currentConditions.windBearing;
+      // windBearing from forecast.io is the direction where the wind is coming from, so substract 180 degrees
+      currentConditions.windBearing = currentConditions.windBearing - 180;
       jQuery('#info-wind-speed').animate({ left: 0, top: 0 }, {
         step: function(now, fx) {
           jQuery(this).css('transform','rotate('+(fx.pos * currentConditions.windBearing)+'deg)');
