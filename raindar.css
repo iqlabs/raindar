@@ -86,6 +86,7 @@ html, body {
 }
 
 #menu-bar .text {
+  margin-left: 5px;
   vertical-align: middle;
 }
 
