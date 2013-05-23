@@ -149,10 +149,6 @@ html, body {
   display: inline-block;
 }
 
-#playback-bar .wrapper {
-  width: 33%;
-}
-
 #playback-bar .text {
   vertical-align: middle;
 }
@@ -167,6 +163,10 @@ html, body {
   background-image: url(assets/play-icon.png);
   height: 22px;
   width: 22px;
+}
+
+#info-location-time-wrapper {
+  width: 80%;
 }
 
 .info-location-time-text.location, .info-location-time-text.date {
