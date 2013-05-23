@@ -68,7 +68,7 @@ html, body {
   background: linear-gradient(0deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   border-bottom: 1px solid #D2D1CF;
   font-family: 'Arvo', serif;
-  font-size: 1em;
+  font-size: 0.8em;
   opacity: 0.8;
   padding: 5px;
   text-align: center;
@@ -181,6 +181,7 @@ html, body {
 
 @media screen and (min-width: 60em) {
   #menu-bar {
+    font-size: 1em;
     position: absolute;
     right: 0;
     width: 33%;
