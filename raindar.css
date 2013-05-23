@@ -203,6 +203,36 @@ html, body {
   width: 22px;
 }
 
+@media screen and (max-width: 20em) {
+  #info-wind-speed-wrapper {
+    width: 30%;
+  }
+
+  #info-precipitation-chance-wrapper {
+    width: 15%;
+  }
+
+  #info-temperature-wrapper {
+    width: 15%;
+  }
+
+  #button-change-map-view-wrapper {
+    width: 40%;
+  }
+
+  .info-location-time-text.location {
+    width: 40%;
+  }
+
+  .info-location-time-text.date {
+    width: 40%;
+  }
+
+  .info-location-time-text.time {
+    width: 20%;
+  }
+}
+
 @media screen and (min-width: 60em) {
   #menu-bar {
     font-size: 1em;
