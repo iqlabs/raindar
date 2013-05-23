@@ -199,7 +199,7 @@ html, body {
 .info-location-time-text.location, .info-location-time-text.date {
   font-size: 0.8em;
 }
-
+.
 .info-location-time-text.location {
   width: 50%;
 }
@@ -216,6 +216,41 @@ html, body {
   background-image: url(assets/_info-icon.png);
   height: 22px;
   width: 22px;
+}
+
+#button-zoom {
+  background-image: url(assets/zoom.png);
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  height: 56px;
+  width: 26px;
+  z-index: 999;
+}
+
+#button-zoom .button-zoom-in {
+  height: 28px;
+  width: 26px;
+  position: absolute;
+}
+
+#button-zoom .button-zoom-out {
+  height: 28px;
+  top: 28px;
+  width: 26px;
+  position: absolute;
+}
+
+#button-zoom a:hover {
+  cursor: pointer;
+}
+
+#button-zoom.in {
+  background-image: url(assets/zoom-in-button.png);
+}
+
+#button-zoom.out {
+  background-image: url(assets/zoom-out-button.png);
 }
 
 @media screen and (max-width: 20em) {

@@ -103,7 +103,7 @@ var raindar = function () {
     var metAPIKey = "c1d1b645-d1c4-4883-bfb4-2adb3c346f80";
     var metCapabilitiesURL = "http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/all/json/capabilities?key=" + metAPIKey;
 
-    var map = new OpenLayers.Map('map');
+    var map = new OpenLayers.Map('map', {controls: []});
 
     var googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
     var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22, visibility: false});
@@ -118,6 +118,30 @@ var raindar = function () {
       ),
       defaultZoomLevel
     );
+
+    jQuery('a.button-zoom-in').on('click', function() {
+      map.zoomIn();
+    });
+
+    jQuery('a.button-zoom-in').on('mousedown', function() {
+      jQuery(this).parent().removeClass('out').addClass('in');
+    });
+
+    jQuery('a.button-zoom-in').on('mouseup', function() {
+      jQuery(this).parent().removeClass('out').removeClass('in');
+    });
+
+    jQuery('a.button-zoom-out').on('click', function() {
+      map.zoomOut();
+    });
+
+    jQuery('a.button-zoom-out').on('mousedown', function() {
+      jQuery(this).parent().removeClass('in').addClass('out');
+    });
+
+    jQuery('a.button-zoom-out').on('mouseup', function() {
+      jQuery(this).parent().removeClass('out').removeClass('in');
+    });
 
     jQuery('a.button-to-map').on('click', function() {
       var wrapper = jQuery(this).parent();
