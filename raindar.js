@@ -82,7 +82,7 @@ var raindar = function () {
       });
       jQuery('.info-wind-speed-text').html(windSpeed + ' km/h');
       jQuery('.info-precipitation-chance-text').html(precipitationProbability + '%');
-      jQuery('.info-temperature-text').html(temperature + 'C');
+      jQuery('.info-temperature-text').html(temperature + ' &deg;C');
     });
 
 
