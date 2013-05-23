@@ -47,6 +47,7 @@ var raindar = function () {
   }
 
   function refreshData() {
+
     jQuery('#info-location-time-wrapper .location').html(currentCity);
 
     // Get data from forecast.io
@@ -66,11 +67,18 @@ var raindar = function () {
       {url: forecastIOUrlString, dataType:'jsonp'}
     ).done(function(forecast_response) {
       var currentConditions = forecast_response.currently;
-      var windBearing = currentConditions.windBearing;
+      var windBearing = typeof currentConditions.windBearing !== 'undefined' ? parseInt(currentConditions.windBearing, 10) : 0;
       var windSpeed = typeof currentConditions.windSpeed !== 'undefined' ? parseInt(currentConditions.windSpeed, 10) : '?';
       var precipitationProbability = typeof currentConditions.precipProbability !== 'undefined' ? parseInt(currentConditions.precipProbability, 10) : '?';
       var temperature = typeof currentConditions.temperature !== 'undefined' ? parseInt(currentConditions.temperature, 10) : '?';
 
+      currentConditions.windBearing = currentConditions.windBearing > 180 ? -(360 - currentConditions.windBearing) : currentConditions.windBearing;
+      jQuery('#info-wind-speed').animate({ left: 0, top: 0 }, {
+        step: function(now, fx) {
+          jQuery(this).css('transform','rotate('+(fx.pos * currentConditions.windBearing)+'deg)');
+        },
+        duration: 1000
+      });
       jQuery('.info-wind-speed-text').html(windSpeed + ' km/h');
       jQuery('.info-precipitation-chance-text').html(precipitationProbability + '%');
       jQuery('.info-temperature-text').html(temperature + 'C');
