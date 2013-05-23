@@ -68,6 +68,7 @@ html, body {
   background: linear-gradient(0deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   border-bottom: 1px solid #D2D1CF;
   font-family: 'Arvo', serif;
+  color: #444444;
   font-size: 0.8em;
   opacity: 0.8;
   padding: 5px;
@@ -161,6 +162,7 @@ html, body {
   background: -ms-linear-gradient(270deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   background: linear-gradient(0deg, rgb(218, 218, 218) 0%, rgb(255, 255, 255) 73%);
   bottom: 0;
+  color: #444444;
   font-family: 'Arvo', serif;
   font-size: 1em;
   opacity: 0.8;
