@@ -127,6 +127,20 @@ html, body {
   width: 30%;
 }
 
+#button-change-map-view .button-to-map {
+  height: 33px;
+  width: 36px;
+}
+
+#button-change-map-view .button-to-satellite {
+  height: 33px;
+  width: 36px;
+}
+
+#button-change-map-view a:hover {
+  cursor: pointer;
+}
+
 #button-change-map-view.map {
   background-image: url(assets/toggle-map-on--satellite-off.png);
   height: 33px;

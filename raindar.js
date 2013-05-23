@@ -106,12 +106,10 @@ var raindar = function () {
     var map = new OpenLayers.Map('map');
 
     var googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-    var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
+    var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22, visibility: false});
 
     map.addLayer(googleMapsLayerStreet);
     map.addLayer(googleMapsLayerSatellite);
-
-    map.addControl(new OpenLayers.Control.LayerSwitcher());
 
     map.setCenter(
       centerLonLat.transform(
@@ -120,6 +118,23 @@ var raindar = function () {
       ),
       defaultZoomLevel
     );
+
+    jQuery('a.button-to-map').on('click', function() {
+      var wrapper = jQuery(this).parent();
+      wrapper.removeClass('satellite');
+      wrapper.addClass('map');
+      googleMapsLayerStreet.setVisibility(true);
+      googleMapsLayerSatellite.setVisibility(false);
+    });
+
+    jQuery('a.button-to-satellite').on('click', function() {
+      var wrapper = jQuery(this).parent();
+      wrapper.removeClass('map');
+      wrapper.addClass('satellite');
+      googleMapsLayerSatellite.setVisibility(true);
+      googleMapsLayerStreet.setVisibility(false);
+    });
+
 
     // Define the Datapoint layer bounding box
     // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
