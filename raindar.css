@@ -210,7 +210,6 @@ html, body {
   background-image: url(assets/_info-icon.png);
   height: 22px;
   width: 22px;
-  z-index: 999;
 }
 
 #button-zoom {
