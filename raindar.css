@@ -183,8 +183,6 @@ html, body {
 
   #playback-bar {
     bottom: auto;
-    position: absolute;
-    float: left;
     width: 33%;
   }
 }
