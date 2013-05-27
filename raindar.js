@@ -3,7 +3,7 @@ var raindar = function () {
 
   var currentLocationLatitude = 52.6675;
   var currentLocationLongitude = -8.6261;
-  var currentCity = 'Limerick';
+  var currentCity = '???';
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
