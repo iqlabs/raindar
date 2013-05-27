@@ -106,7 +106,7 @@ var raindar = function () {
     var map = new OpenLayers.Map('map', {controls: []});
 
     var googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-    var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22, visibility: false});
+    var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
 
     map.addLayer(googleMapsLayerStreet);
     map.addLayer(googleMapsLayerSatellite);
