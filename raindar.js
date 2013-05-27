@@ -1,4 +1,20 @@
-var raindar = function () {
+requirejs.config({
+  paths: {
+    async: 'third_party/requirejs-plugins/async',
+    jQuery: 'third_party/jquery/jquery',
+    OpenLayers: 'http://openlayers.org/api/OpenLayers'
+  },
+  shim: {
+    jQuery: {
+      exports: 'jQuery'
+    },
+    OpenLayers: {
+      exports: 'OpenLayers'
+    }
+  }
+});
+
+define(['jQuery', 'google', 'OpenLayers'], function(jQuery, google, OpenLayers) {
   var _raindar = this;
 
   var currentLocationLatitude = 52.6675;
@@ -249,5 +265,4 @@ var raindar = function () {
       return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
     };
   }
-};
-jQuery.ready(raindar());
+});
