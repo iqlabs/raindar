@@ -82,10 +82,25 @@ define(['jQuery', 'google', 'OpenLayers'], function(jQuery, google, OpenLayers) 
     jQuery.ajax(
       {url: forecastIOUrlString, dataType:'jsonp'}
     ).done(function(forecast_response) {
+      var availableIcons = [
+        'clear-day',
+        'clear-night',
+        'cloudy',
+        'fog',
+        'partly-cloudy-day',
+        'partly-cloudy-night',
+        'rain',
+        'sleet',
+        'snow',
+        'wind'
+      ];
       var currentConditions = forecast_response.currently;
       var windBearing = typeof currentConditions.windBearing !== 'undefined' ? parseInt(currentConditions.windBearing, 10) : 0;
       var windSpeed = typeof currentConditions.windSpeed !== 'undefined' ? parseInt(currentConditions.windSpeed, 10) : '?';
-      var precipitationProbability = typeof currentConditions.precipProbability !== 'undefined' ? parseInt(currentConditions.precipProbability*100, 10) : '?';
+      var weatherIcon = typeof currentConditions.icon !== 'undefined' ? currentConditions.icon : 'unknown';
+      if (!jQuery.inArray(weatherIcon, availableIcons)) {
+        weatherIcon = 'unknown';
+      }
       var temperature = typeof currentConditions.temperature !== 'undefined' ? parseInt(currentConditions.temperature, 10) : '?';
 
       // windBearing from forecast.io is the direction where the wind is coming from, so substract 180 degrees
@@ -97,7 +112,7 @@ define(['jQuery', 'google', 'OpenLayers'], function(jQuery, google, OpenLayers) 
         duration: 1000
       });
       jQuery('.info-wind-speed-text').html(windSpeed + ' km/h');
-      jQuery('.info-precipitation-chance-text').html(precipitationProbability + '%');
+      jQuery('#info-weather').css('background-image', 'url(assets/weather-' + weatherIcon + '.png)');
       jQuery('.info-temperature-text').html(temperature + ' &deg;C');
     });
 
