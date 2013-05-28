@@ -41,7 +41,6 @@ html, body {
 #menu-bar {
   .bars;
   font-size: 0.8em;
-  text-align: center;
   * {
     display: inline-block;
   }
@@ -55,6 +54,8 @@ html, body {
   }
   #info-wind-speed-wrapper {
     width: 30%;
+    padding-left: 5px;
+    text-align: left;
     #info-wind-speed {
       background-image: url('@{image-windspeed}');
       height: 25px;
@@ -65,7 +66,8 @@ html, body {
     }
   }
   #info-weather-wrapper {
-    width: 25%;
+    text-align: left;
+    width: 15%;
     #info-weather {
       background-image: url('@{image-weather-unknown}');
       height: 23px;
@@ -76,7 +78,8 @@ html, body {
     }
   }
   #info-temperature-wrapper {
-    width: 17%;
+    text-align: right;
+    width: 15%;
     #info-temperature {
       background-image: url('@{image-temperature}');
       height: 23px;
@@ -88,8 +91,8 @@ html, body {
   }
   #button-change-map-view-wrapper {
     text-align: right;
-    margin-right: 30px;
-    width: 24%;
+    width: 33%;
+    min-width: 73px;
     #button-change-map-view {
       .button-to-map {
         height: 33px;
