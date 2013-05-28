@@ -129,25 +129,25 @@ html, body {
   * {
     display: inline-block;
   }
-  .text {
-    vertical-align: baseline;
-  }
   .image {
     background-position: left center;
     background-repeat: no-repeat;
-    vertical-align: middle;
   }
   #button-play-wrapper {
-    margin-left: 3%;
+    position: absolute;
+    left: 10px;
     #button-play {
       background-image: url('@{image-play}');
+      padding-top: 10px;
       height: 22px;
       width: 22px;
     }
   }
   #info-location-time-wrapper {
-    width: 80%;
+    width: 100%;
     text-align: center;
+    line-height: 32px;
+    vertical-align: middle;
     div {
       margin-right: 1px;
     }
@@ -157,7 +157,8 @@ html, body {
   }
   #button-about-wrapper {
     position: absolute;
-    right: 7.5%;
+    right: 10px;
+    top: 10px;
     #button-about {
       background-image: url('@{image-about}');
       height: 22px;
