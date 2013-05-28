@@ -27,13 +27,31 @@ module.exports = function(grunt) {
             requireLib: 'third_party/requirejs/require'
           },
           removeCombined: true,
-          optimizeCss: "standard",
           modules: [
             {
               name: 'raindar',
               include: 'requireLib'
             }
           ]
+        }
+      }
+    },
+    less: {
+      development: {
+        options: {
+          paths: ['css/'],
+          dumpLineNumbers: 'all'
+        },
+        files: {
+          'raindar.css': 'css/**/*'
+        }
+      },
+      production: {
+        options: {
+          yuicompress: true
+        },
+        files: {
+          'raindar.css': 'css/**/*'
         }
       }
     },
@@ -47,12 +65,18 @@ module.exports = function(grunt) {
       html: {
         src: '<%= meta.src.build_dir %>/index.html'
       }
+    },
+    watch: {
+      files: 'css/*',
+      tasks: ['less:development']
     }
   });
 
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-preprocess');
+  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('remove_from_build', function() {
     var build_dir = grunt.config('meta.src.build_dir');
@@ -63,5 +87,5 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('init', ['bower:install']);
-  grunt.registerTask('build', ['requirejs:compile', 'preprocess', 'remove_from_build']);
+  grunt.registerTask('build', ['requirejs:compile', 'less:production', 'preprocess', 'remove_from_build']);
 };
