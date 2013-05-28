@@ -81,11 +81,12 @@ module.exports = function(grunt) {
   grunt.registerTask('remove_from_build', function() {
     var build_dir = grunt.config('meta.src.build_dir');
     grunt.file.delete(build_dir + '/third_party');
+    grunt.file.delete(build_dir + '/css');
     grunt.file.delete(build_dir + '/build.txt');
     grunt.file.delete(build_dir + '/raindar.css');
     grunt.file.delete(build_dir + '/raindar.js');
   });
 
   grunt.registerTask('init', ['bower:install']);
-  grunt.registerTask('build', ['requirejs:compile', 'less:production', 'preprocess', 'remove_from_build']);
+  grunt.registerTask('build', [ 'less:production', 'requirejs:compile', 'preprocess', 'remove_from_build']);
 };
