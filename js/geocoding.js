@@ -27,6 +27,8 @@ define(['jQuery', 'google'], function(jQuery, google) {
         else {
           deferred.reject();
         }
+      } else {
+        deferred.reject();
       }
     });
     return deferred.promise();
