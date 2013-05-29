@@ -14,7 +14,7 @@ requirejs.config({
   }
 });
 
-define(['jQuery', 'google', 'OpenLayers'], function(jQuery, google, OpenLayers) {
+define(['jQuery', 'google', 'OpenLayers', 'geocoding'], function(jQuery, google, OpenLayers, geocoding) {
   var _raindar = this;
 
   var currentLocationLatitude = 52.6675;
@@ -26,27 +26,14 @@ define(['jQuery', 'google', 'OpenLayers'], function(jQuery, google, OpenLayers) 
       function(position) {
         currentLocationLatitude = position.coords.latitude;
         currentLocationLongitude = position.coords.longitude;
-        var google_geocoder = new google.maps.Geocoder();
-        var google_latlon = new google.maps.LatLng(currentLocationLatitude, currentLocationLongitude);
-        google_geocoder.geocode({'latLng': google_latlon}, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            jQuery.each(results, function(index, result) {
-              var cityFound = false;
-              jQuery.each(result.types, function(index, type) {
-                if (type === 'locality') {
-                  currentCity = result.address_components[index].short_name;
-                  cityFound = true;
-                  return false;
-                }
-              });
-              if (cityFound === true) {
-                return false;
-              }
-            });
-          }
+        geocoding.gettingCity(currentLocationLatitude, currentLocationLongitude).done(function (city) {
+          currentCity = city;
           jQuery('#info-location-time-wrapper .location').html(currentCity);
+          refreshData();
+        }).fail(function () {
+          refreshData();
         });
-        refreshData();
+
       },
       function(error) {
         var errors = {
