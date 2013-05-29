@@ -64,7 +64,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       var windBearing = typeof weather.windBearing !== 'undefined' ? parseInt(weather.windBearing, 10) : 0;
       var windSpeed = typeof weather.windSpeed !== 'undefined' ? parseInt(weather.windSpeed, 10) : '?';
       var weatherIcon = typeof weather.icon !== 'undefined' ? weather.icon : 'unknown';
-      if (!jQuery.inArray(weatherIcon, availableIcons)) {
+      if (jQuery.inArray(weatherIcon, availableIcons) === -1) {
         weatherIcon = 'unknown';
       }
       var temperature = typeof weather.temperature !== 'undefined' ? parseInt(weather.temperature, 10) : '?';
