@@ -203,6 +203,10 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       googleMapsLayerStreet.setVisibility(false);
     });
 
+    jQuery('#button-about').on('click', function() {
+      jQuery('#about-screen').show();
+    });
+
     jQuery('#button-play').on('click', function() {
       jQuery(this).attr('disabled', 'disabled');
       var counter = 0;
@@ -232,6 +236,10 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
 
     jQuery('#button-refresh-data').on('click', function() {
       refreshData();
+    });
+
+    jQuery('#about-screen .close').on('click', function() {
+      jQuery(this).parent().hide();
     });
   }
 
