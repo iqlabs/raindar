@@ -14,7 +14,7 @@ requirejs.config({
   }
 });
 
-define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO'], function(jQuery, google, OpenLayers, geocoding, forecastIO) {
+define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], function(jQuery, google, OpenLayers, geocoding, forecastIO, met) {
   var currentLocationLatitude = 52.6675;
   var currentLocationLongitude = -8.6261;
   var currentCity = '???';
@@ -85,6 +85,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO'], function(j
 
 
 
+
     // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
     var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
     var defaultZoomLevel = 7;
@@ -97,9 +98,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO'], function(j
 
     var olProjection = new OpenLayers.Projection(projection);
     var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
-
-    var metAPIKey = "c1d1b645-d1c4-4883-bfb4-2adb3c346f80";
-    var metCapabilitiesURL = "http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/all/json/capabilities?key=" + metAPIKey;
 
     var map = new OpenLayers.Map(
       'map',
@@ -176,43 +174,26 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO'], function(j
     // Get the Datapoint image
     var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
 
-    var url_template = [
-      'http://datapoint.metoffice.gov.uk/public/data/layer/wxobs/RADAR_UK_Composite_Highres/png?TIME=',
-      null,
-      'Z&key=', metAPIKey];
-
-    var times = [];
-    var image_urls = [];
     var radarLayers = [];
+    var times = [];
 
-    var loadingCapabilities =
-    jQuery.ajax(
-      {url: metCapabilitiesURL, dataType:'jsonp'}
-    )
-    .done(
-      function(capabilities_json) {
-        var radar = capabilities_json["Layers"]["Layer"][3];
-        var radar_times = radar['Service']['Times']['Time'].reverse();
-        jQuery.each(radar_times, function(index, time) {
-          times.push(new Date(time));
-          image_urls.push(url_template.slice());
-          image_urls[index][1] = time;
-          image_urls[index] = image_urls[index].join('');
-          radarLayers[index] = new OpenLayers.Layer.Image(
-            "Datapoint Composite Radar",
-            image_urls[index],
-            bounds,
-            layerSize,
-            {isBaseLayer: false, opacity: 0.65}
-          );
-          map.addLayer(radarLayers[index]);
-          radarLayers[index].setVisibility(false);
-        });
-        radarLayers[radarLayers.length -1].setVisibility(true);
-        jQuery('#info-location-time-wrapper .time').html(timeString(times[radarLayers.length - 1]));
-        jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
-      }
-    );
+    met.gettingURLsAndTimes().done(function(data) {
+      times = data.times;
+      jQuery.each(data.images_urls, function(index, url) {
+        radarLayers[index] = new OpenLayers.Layer.Image(
+          "Datapoint Composite Radar",
+          url,
+          bounds,
+          layerSize,
+          {isBaseLayer: false, opacity: 0.65}
+        );
+        map.addLayer(radarLayers[index]);
+        radarLayers[index].setVisibility(false);
+      });
+      radarLayers[radarLayers.length -1].setVisibility(true);
+      jQuery('#info-location-time-wrapper .time').html(timeString(times[radarLayers.length - 1]));
+      jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
+    });
 
     jQuery('#button-play').on('click', function() {
       var counter = 0;
