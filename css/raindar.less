@@ -223,6 +223,17 @@ html, body {
   bottom: 52px;
 }
 
+#about-screen-mask{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  display: none;
+  background-color: black;
+  opacity: 0.7;
+  z-index: 1000;
+}
 #about-screen {
   .basic-style;
   font-weight: 400;
@@ -241,7 +252,7 @@ html, body {
   width: 90%;
   height: 90%;
   overflow: auto;
-  z-index: 1000;
+  z-index: 1001;
   @media screen and (min-width: 30em) {
     font-size: 0.9em;
     top: 15%;

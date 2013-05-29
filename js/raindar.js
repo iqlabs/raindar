@@ -222,7 +222,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
 
     jQuery('#button-about').on('click', function() {
-      jQuery('#about-screen').show();
+      jQuery('#about-screen, #about-screen-mask').show();
     });
 
     jQuery('#button-play').on('click', function() {
@@ -254,7 +254,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
 
     jQuery('#about-screen .close').on('click', function() {
-      jQuery('#about-screen').hide();
+      jQuery('#about-screen, #about-screen-mask').hide();
     });
   }
 
