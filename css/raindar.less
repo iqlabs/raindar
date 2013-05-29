@@ -63,9 +63,12 @@ html, body {
     background-repeat: no-repeat;
     vertical-align: middle;
   }
+  .wrapper {
+    padding-top: 5px;
+  }
   #info-wind-speed-wrapper {
     width: 30%;
-    padding-left: 5px;
+    padding-left: 10px;
     text-align: left;
     #info-wind-speed {
       background-image: url('@{image-windspeed}');
@@ -78,7 +81,7 @@ html, body {
   }
   #info-weather-wrapper {
     text-align: left;
-    width: 15%;
+    width: 10%;
     #info-weather {
       background-image: url('@{image-weather-unknown}');
       height: 23px;
@@ -89,8 +92,8 @@ html, body {
     }
   }
   #info-temperature-wrapper {
-    text-align: right;
-    width: 15%;
+    text-align: center;
+    width: 18%;
     #info-temperature {
       background-image: url('@{image-temperature}');
       height: 23px;
@@ -102,7 +105,9 @@ html, body {
   }
   #button-change-map-view-wrapper {
     text-align: right;
-    width: 33%;
+    padding-top: 0px;
+    padding-right: 10px;
+    float: right;
     min-width: 73px;
     #button-change-map-view {
       .button-to-map {
@@ -295,15 +300,11 @@ html, body {
   }
 
   #info-weather-wrapper {
-    width: 23%;
+    width: 15%;
   }
 
   #info-temperature-wrapper {
     width: 14%;
-  }
-
-  #button-change-map-view-wrapper {
-    width: 30%;
   }
 }
 
@@ -313,6 +314,12 @@ html, body {
     position: absolute;
     right: 0;
     width: 33%;
+    #info-weather-wrapper {
+      width: 20%;
+    }
+    #info-temperature-wrapper {
+      width: 20%;
+    }
   }
 
   #playback-bar {
