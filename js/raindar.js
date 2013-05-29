@@ -225,12 +225,12 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
   }
 
-  var timeString = function(input_date) {
+  function timeString(input_date) {
     return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
-  };
+  }
 
-  var dateString = function(input_date) {
+  function dateString(input_date) {
     return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
-  };
+  }
 
 });
