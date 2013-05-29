@@ -83,9 +83,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       jQuery('.info-temperature-text').html(temperature + ' &deg;C');
     });
 
-
-
-
     // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
     var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
     var defaultZoomLevel = 7;
