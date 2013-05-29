@@ -15,8 +15,6 @@ requirejs.config({
 });
 
 define(['jQuery', 'google', 'OpenLayers', 'geocoding'], function(jQuery, google, OpenLayers, geocoding) {
-  var _raindar = this;
-
   var currentLocationLatitude = 52.6675;
   var currentLocationLongitude = -8.6261;
   var currentCity = '???';
