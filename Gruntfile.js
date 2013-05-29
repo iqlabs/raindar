@@ -24,7 +24,6 @@ module.exports = function(grunt) {
           baseUrl: '<%= meta.src.javascript_dir %>',
           mainConfigFile: '<%= meta.src.javascript_dir %>/raindar.js',
           dir: '<%= meta.src.build_dir %>',
-          fileExclusionRegExp: /^\.|node_modules|Gruntfile\.js|bower\.json|package\.json|sublime/,
           paths: {
             OpenLayers: 'empty:',
             requireLib: '../<%= meta.src.bower_dir %>/requirejs/require'
