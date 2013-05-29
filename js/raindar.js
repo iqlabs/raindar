@@ -26,7 +26,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding'], function(jQuery, google,
         currentLocationLongitude = position.coords.longitude;
         geocoding.gettingCity(currentLocationLatitude, currentLocationLongitude).done(function (city) {
           currentCity = city;
-          jQuery('#info-location-time-wrapper .location').html(currentCity);
           refreshData();
         }).fail(function () {
           refreshData();
