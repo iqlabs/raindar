@@ -164,72 +164,73 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     if (eventsbound === false) {
       bindEvents();
     }
-
-    function bindEvents() {
-      jQuery('a.button-zoom-in').on('mousedown', function() {
-        jQuery(this).parent().removeClass('out').addClass('in');
-      });
-
-      jQuery('a.button-zoom-in').on('mouseup', function() {
-        jQuery(this).parent().removeClass('out').removeClass('in');
-      });
-
-      jQuery('a.button-zoom-out').on('mousedown', function() {
-        jQuery(this).parent().removeClass('in').addClass('out');
-      });
-
-      jQuery('a.button-zoom-out').on('mouseup', function() {
-        jQuery(this).parent().removeClass('out').removeClass('in');
-      });
-
-      jQuery('a.button-to-map').on('click', function() {
-        var wrapper = jQuery(this).parent();
-        wrapper.removeClass('satellite');
-        wrapper.addClass('map');
-        googleMapsLayerStreet.setVisibility(true);
-        googleMapsLayerSatellite.setVisibility(false);
-      });
-
-      jQuery('a.button-to-satellite').on('click', function() {
-        var wrapper = jQuery(this).parent();
-        wrapper.removeClass('map');
-        wrapper.addClass('satellite');
-        googleMapsLayerSatellite.setVisibility(true);
-        googleMapsLayerStreet.setVisibility(false);
-      });
-
-      jQuery('#button-play').on('click', function() {
-        var counter = 0;
-        var radarLayersLength = radarLayers.length;
-        radarLayers[radarLayersLength - 1].setVisibility(false);
-
-        var interval = setInterval(
-          function() {
-            var remove = counter - 1;
-            if (remove<0) {
-              remove = radarLayersLength-1;
-            }
-            radarLayers[remove].setVisibility(false);
-            radarLayers[counter].setVisibility(true);
-            jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
-            jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
-            if (counter === radarLayersLength-1) {
-              clearInterval(interval);
-            }
-            else {
-              counter++;
-            }
-          }, 300
-        );
-      });
-    }
-
-    var timeString = function(input_date) {
-      return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
-    };
-
-    var dateString = function(input_date) {
-      return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
-    };
   }
+
+  function bindEvents() {
+    jQuery('a.button-zoom-in').on('mousedown', function() {
+      jQuery(this).parent().removeClass('out').addClass('in');
+    });
+
+    jQuery('a.button-zoom-in').on('mouseup', function() {
+      jQuery(this).parent().removeClass('out').removeClass('in');
+    });
+
+    jQuery('a.button-zoom-out').on('mousedown', function() {
+      jQuery(this).parent().removeClass('in').addClass('out');
+    });
+
+    jQuery('a.button-zoom-out').on('mouseup', function() {
+      jQuery(this).parent().removeClass('out').removeClass('in');
+    });
+
+    jQuery('a.button-to-map').on('click', function() {
+      var wrapper = jQuery(this).parent();
+      wrapper.removeClass('satellite');
+      wrapper.addClass('map');
+      googleMapsLayerStreet.setVisibility(true);
+      googleMapsLayerSatellite.setVisibility(false);
+    });
+
+    jQuery('a.button-to-satellite').on('click', function() {
+      var wrapper = jQuery(this).parent();
+      wrapper.removeClass('map');
+      wrapper.addClass('satellite');
+      googleMapsLayerSatellite.setVisibility(true);
+      googleMapsLayerStreet.setVisibility(false);
+    });
+
+    jQuery('#button-play').on('click', function() {
+      var counter = 0;
+      var radarLayersLength = radarLayers.length;
+      radarLayers[radarLayersLength - 1].setVisibility(false);
+
+      var interval = setInterval(
+        function() {
+          var remove = counter - 1;
+          if (remove<0) {
+            remove = radarLayersLength-1;
+          }
+          radarLayers[remove].setVisibility(false);
+          radarLayers[counter].setVisibility(true);
+          jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
+          jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
+          if (counter === radarLayersLength-1) {
+            clearInterval(interval);
+          }
+          else {
+            counter++;
+          }
+        }, 300
+      );
+    });
+  }
+
+  var timeString = function(input_date) {
+    return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
+  };
+
+  var dateString = function(input_date) {
+    return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
+  };
+
 });
