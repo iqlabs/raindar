@@ -25,8 +25,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
   var olProjection = new OpenLayers.Projection(projection);
   var map;
 
-  var eventsbound = false;
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       function(position) {
@@ -92,6 +90,8 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       ),
       defaultZoomLevel
     );
+
+    bindEvents();
 
     refreshData();
   }
@@ -165,10 +165,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       jQuery('#info-location-time-wrapper .time').html(timeString(times[radarLayers.length - 1]));
       jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
     });
-
-    if (eventsbound === false) {
-      bindEvents();
-    }
   }
 
   function bindEvents() {
