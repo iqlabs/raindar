@@ -14,7 +14,7 @@ requirejs.config({
   }
 });
 
-define(['jQuery', 'google', 'OpenLayers', 'geocoding'], function(jQuery, google, OpenLayers, geocoding) {
+define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO'], function(jQuery, google, OpenLayers, geocoding, forecastIO) {
   var currentLocationLatitude = 52.6675;
   var currentLocationLongitude = -8.6261;
   var currentCity = '???';
@@ -48,24 +48,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding'], function(jQuery, google,
 
   function refreshData() {
 
-    jQuery('#info-location-time-wrapper .location').html(currentCity);
-
-    // Get data from forecast.io
-    var forecastIOAPIKey = '931bb054da507e4747844db62accc6a5';
-    var forecastIOUrl = [
-      'https://api.forecast.io/forecast',
-      forecastIOAPIKey,
-      null
-    ];
-
-    forecastIOUrl[2] = [currentLocationLatitude, currentLocationLongitude].join(',');
-
-    var forecastIOUrlString = forecastIOUrl.join('/') + '?units=si&exclude=daily,flags,hourly,minutely';
-
-    var loadingForecast =
-    jQuery.ajax(
-      {url: forecastIOUrlString, dataType:'jsonp'}
-    ).done(function(forecast_response) {
+    forecastIO.gettingCurrentWeather(currentLocationLatitude, currentLocationLongitude).done(function(weather) {
       var availableIcons = [
         'clear-day',
         'clear-night',
@@ -78,20 +61,20 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding'], function(jQuery, google,
         'snow',
         'wind'
       ];
-      var currentConditions = forecast_response.currently;
-      var windBearing = typeof currentConditions.windBearing !== 'undefined' ? parseInt(currentConditions.windBearing, 10) : 0;
-      var windSpeed = typeof currentConditions.windSpeed !== 'undefined' ? parseInt(currentConditions.windSpeed, 10) : '?';
-      var weatherIcon = typeof currentConditions.icon !== 'undefined' ? currentConditions.icon : 'unknown';
+      var windBearing = typeof weather.windBearing !== 'undefined' ? parseInt(weather.windBearing, 10) : 0;
+      var windSpeed = typeof weather.windSpeed !== 'undefined' ? parseInt(weather.windSpeed, 10) : '?';
+      var weatherIcon = typeof weather.icon !== 'undefined' ? weather.icon : 'unknown';
       if (!jQuery.inArray(weatherIcon, availableIcons)) {
         weatherIcon = 'unknown';
       }
-      var temperature = typeof currentConditions.temperature !== 'undefined' ? parseInt(currentConditions.temperature, 10) : '?';
+      var temperature = typeof weather.temperature !== 'undefined' ? parseInt(weather.temperature, 10) : '?';
 
       // windBearing from forecast.io is the direction where the wind is coming from, so substract 180 degrees
-      currentConditions.windBearing = currentConditions.windBearing - 180;
+      jQuery('#info-location-time-wrapper .location').html(currentCity);
+      weather.windBearing = weather.windBearing - 180;
       jQuery('#info-wind-speed').animate({ left: 0, top: 0 }, {
         step: function(now, fx) {
-          jQuery(this).css('transform','rotate('+(fx.pos * currentConditions.windBearing)+'deg)');
+          jQuery(this).css('transform','rotate('+(fx.pos * weather.windBearing)+'deg)');
         },
         duration: 1000
       });
