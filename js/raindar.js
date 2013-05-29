@@ -254,7 +254,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
 
     jQuery('#about-screen .close').on('click', function() {
-      jQuery(this).parent().hide();
+      jQuery('#about-screen').hide();
     });
   }
 
