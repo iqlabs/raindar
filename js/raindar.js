@@ -18,6 +18,11 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
   var currentLocationLatitude = 52.6675;
   var currentLocationLongitude = -8.6261;
   var currentCity = '???';
+  var googleMapsLayerStreet, googleMapsLayerSatellite;
+  var radarLayers = [];
+  var times = [];
+
+  var eventsbound = false;
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -115,8 +120,8 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       }
     );
 
-    var googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-    var googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
+    googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
+    googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
 
     map.addLayer(googleMapsLayerStreet);
     map.addLayer(googleMapsLayerSatellite);
@@ -129,39 +134,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       defaultZoomLevel
     );
 
-    jQuery('a.button-zoom-in').on('mousedown', function() {
-      jQuery(this).parent().removeClass('out').addClass('in');
-    });
-
-    jQuery('a.button-zoom-in').on('mouseup', function() {
-      jQuery(this).parent().removeClass('out').removeClass('in');
-    });
-
-    jQuery('a.button-zoom-out').on('mousedown', function() {
-      jQuery(this).parent().removeClass('in').addClass('out');
-    });
-
-    jQuery('a.button-zoom-out').on('mouseup', function() {
-      jQuery(this).parent().removeClass('out').removeClass('in');
-    });
-
-    jQuery('a.button-to-map').on('click', function() {
-      var wrapper = jQuery(this).parent();
-      wrapper.removeClass('satellite');
-      wrapper.addClass('map');
-      googleMapsLayerStreet.setVisibility(true);
-      googleMapsLayerSatellite.setVisibility(false);
-    });
-
-    jQuery('a.button-to-satellite').on('click', function() {
-      var wrapper = jQuery(this).parent();
-      wrapper.removeClass('map');
-      wrapper.addClass('satellite');
-      googleMapsLayerSatellite.setVisibility(true);
-      googleMapsLayerStreet.setVisibility(false);
-    });
-
-
     // Define the Datapoint layer bounding box
     // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
     var bounds = new OpenLayers.Bounds();
@@ -170,9 +142,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
 
     // Get the Datapoint image
     var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
-
-    var radarLayers = [];
-    var times = [];
 
     met.gettingURLsAndTimes().done(function(data) {
       times = data.times;
@@ -192,30 +161,68 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
     });
 
-    jQuery('#button-play').on('click', function() {
-      var counter = 0;
-      var radarLayersLength = radarLayers.length;
-      radarLayers[radarLayersLength - 1].setVisibility(false);
+    if (eventsbound === false) {
+      bindEvents();
+    }
 
-      var interval = setInterval(
-        function() {
-          var remove = counter - 1;
-          if (remove<0) {
-            remove = radarLayersLength-1;
-          }
-          radarLayers[remove].setVisibility(false);
-          radarLayers[counter].setVisibility(true);
-          jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
-          jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
-          if (counter === radarLayersLength-1) {
-            clearInterval(interval);
-          }
-          else {
-            counter++;
-          }
-        }, 300
-      );
-    });
+    function bindEvents() {
+      jQuery('a.button-zoom-in').on('mousedown', function() {
+        jQuery(this).parent().removeClass('out').addClass('in');
+      });
+
+      jQuery('a.button-zoom-in').on('mouseup', function() {
+        jQuery(this).parent().removeClass('out').removeClass('in');
+      });
+
+      jQuery('a.button-zoom-out').on('mousedown', function() {
+        jQuery(this).parent().removeClass('in').addClass('out');
+      });
+
+      jQuery('a.button-zoom-out').on('mouseup', function() {
+        jQuery(this).parent().removeClass('out').removeClass('in');
+      });
+
+      jQuery('a.button-to-map').on('click', function() {
+        var wrapper = jQuery(this).parent();
+        wrapper.removeClass('satellite');
+        wrapper.addClass('map');
+        googleMapsLayerStreet.setVisibility(true);
+        googleMapsLayerSatellite.setVisibility(false);
+      });
+
+      jQuery('a.button-to-satellite').on('click', function() {
+        var wrapper = jQuery(this).parent();
+        wrapper.removeClass('map');
+        wrapper.addClass('satellite');
+        googleMapsLayerSatellite.setVisibility(true);
+        googleMapsLayerStreet.setVisibility(false);
+      });
+
+      jQuery('#button-play').on('click', function() {
+        var counter = 0;
+        var radarLayersLength = radarLayers.length;
+        radarLayers[radarLayersLength - 1].setVisibility(false);
+
+        var interval = setInterval(
+          function() {
+            var remove = counter - 1;
+            if (remove<0) {
+              remove = radarLayersLength-1;
+            }
+            radarLayers[remove].setVisibility(false);
+            radarLayers[counter].setVisibility(true);
+            jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
+            jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
+            if (counter === radarLayersLength-1) {
+              clearInterval(interval);
+            }
+            else {
+              counter++;
+            }
+          }, 300
+        );
+      });
+    }
 
     var timeString = function(input_date) {
       return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
