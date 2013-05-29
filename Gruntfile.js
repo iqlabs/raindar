@@ -4,6 +4,7 @@ module.exports = function(grunt) {
       package: grunt.file.readJSON('package.json'),
       src: {
         bower_dir: 'third_party',
+        javascript_dir: 'js',
         build_dir: 'build'
       }
     },
@@ -19,12 +20,13 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: {
-          mainConfigFile: 'raindar.js',
+          baseUrl: '<%= meta.src.javascript_dir %>',
+          mainConfigFile: '<%= meta.src.javascript_dir %>/raindar.js',
           dir: '<%= meta.src.build_dir %>',
           fileExclusionRegExp: /^\.|node_modules|Gruntfile\.js|bower\.json|package\.json|sublime/,
           paths: {
             OpenLayers: 'empty:',
-            requireLib: 'third_party/requirejs/require'
+            requireLib: '../third_party/requirejs/require'
           },
           removeCombined: true,
           modules: [
@@ -51,7 +53,7 @@ module.exports = function(grunt) {
           yuicompress: true
         },
         files: {
-          'raindar.css': 'css/**/*'
+          '<%= meta.src.build_dir %>/raindar.css': 'css/**/*'
         }
       }
     },
@@ -78,15 +80,27 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
+
+  grunt.registerTask('copy_to_build', function() {
+    var build_dir = grunt.config('meta.src.build_dir');
+    grunt.file.expand(['assets/**/*']).forEach(function(src) {
+      if (grunt.file.isDir(src)) {
+        grunt.file.mkdir(build_dir + '/' + src);
+      }
+      else {
+        grunt.file.copy(src, build_dir + '/' + src);
+      }
+    });
+    grunt.file.copy('index.html', build_dir + '/index.html');
+  });
+
   grunt.registerTask('remove_from_build', function() {
     var build_dir = grunt.config('meta.src.build_dir');
-    grunt.file.delete(build_dir + '/third_party');
-    grunt.file.delete(build_dir + '/css');
     grunt.file.delete(build_dir + '/build.txt');
     grunt.file.delete(build_dir + '/raindar.css');
     grunt.file.delete(build_dir + '/raindar.js');
   });
 
   grunt.registerTask('init', ['bower:install']);
-  grunt.registerTask('build', [ 'less:production', 'requirejs:compile', 'preprocess', 'remove_from_build']);
+  grunt.registerTask('build', ['requirejs:compile', 'less:production', 'copy_to_build', 'preprocess', 'remove_from_build']);
 };

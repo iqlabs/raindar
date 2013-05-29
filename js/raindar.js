@@ -1,7 +1,7 @@
 requirejs.config({
   paths: {
-    async: 'third_party/requirejs-plugins/async',
-    jQuery: 'third_party/jquery/jquery',
+    async: '../third_party/requirejs-plugins/async',
+    jQuery: '../third_party/jquery/jquery',
     OpenLayers: 'http://openlayers.org/api/OpenLayers'
   },
   shim: {
