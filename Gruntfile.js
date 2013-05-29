@@ -41,7 +41,7 @@ module.exports = function(grunt) {
     less: {
       development: {
         options: {
-          paths: ['css/'],
+          paths: ['<%= meta.src.css_dir %>/'],
           dumpLineNumbers: 'all'
         },
         files: {
