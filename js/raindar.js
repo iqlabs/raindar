@@ -24,6 +24,8 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
   var projection = 'EPSG:4326';
   var olProjection = new OpenLayers.Projection(projection);
   var map;
+  var layerAnimationInterval;
+  var layerAnimationCounter = 0;
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -165,6 +167,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
         radarLayers[index].setVisibility(false);
       });
       radarLayers[radarLayers.length -1].setVisibility(true);
+      layerAnimationCounter = radarLayers.length - 1;
       jQuery('#info-location-time-wrapper .time').html(timeString(times[radarLayers.length - 1]));
       jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
     });
@@ -208,28 +211,25 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
 
     jQuery('#button-play').on('click', function() {
-      jQuery(this).attr('disabled', 'disabled');
-      var counter = 0;
-      var radarLayersLength = radarLayers.length;
-      radarLayers[radarLayersLength - 1].setVisibility(false);
+      var $play_button = jQuery(this);
+      if ($play_button.hasClass('playing')) {
+        $play_button.removeClass('playing');
+        clearInterval(layerAnimationInterval);
+        return false;
+      }
+      $play_button.addClass('playing');
 
-      var interval = setInterval(
+      var layersNumber = radarLayers.length - 1;
+
+      layerAnimationInterval = setInterval(
         function() {
-          var remove = counter - 1;
-          if (remove<0) {
-            remove = radarLayersLength-1;
-          }
-          radarLayers[remove].setVisibility(false);
-          radarLayers[counter].setVisibility(true);
-          jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
-          jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
-          if (counter === radarLayersLength-1) {
-            jQuery(this).removeAttr('disabled');
-            clearInterval(interval);
-          }
-          else {
-            counter++;
-          }
+          var isCurrentFrameLast = (layerAnimationCounter === layersNumber);
+          var nextLayer = isCurrentFrameLast ? 0 : layerAnimationCounter + 1;
+          radarLayers[layerAnimationCounter].setVisibility(false);
+          radarLayers[nextLayer].setVisibility(true);
+          jQuery('#info-location-time-wrapper .time').html(timeString(times[nextLayer]));
+          jQuery('#info-location-time-wrapper .date').html(dateString(times[nextLayer]));
+          layerAnimationCounter = nextLayer;
         }, 300
       );
     });

@@ -7,6 +7,7 @@
 @image-mapOn: '@{assets-directory}/toggle-map-on--satellite-off.png';
 @image-satOn: '@{assets-directory}/toggle-map-off--satellite-on.png';
 @image-play: '@{assets-directory}/play-icon.png';
+@image-pause: '@{assets-directory}/pause-button.png';
 @image-about: '@{assets-directory}/_info-icon.png';
 @image-zoom-idle: '@{assets-directory}/zoom.png';
 @image-zoom-in: '@{assets-directory}/zoom-in-button.png';
@@ -148,6 +149,9 @@ html, body {
       padding-top: 10px;
       height: 22px;
       width: 22px;
+      &.playing {
+        background-image: url('@{image-pause}');
+      }
     }
   }
   #info-location-time-wrapper {
