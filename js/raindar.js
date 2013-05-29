@@ -53,11 +53,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
   }
 
   function setUpMap() {
-    var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
-    var defaultZoomLevel = 7;
-
-    var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
-
     map = new OpenLayers.Map(
       'map',
       {
@@ -83,6 +78,17 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     map.addLayer(googleMapsLayerStreet);
     map.addLayer(googleMapsLayerSatellite);
 
+    bindEvents();
+
+    refreshData();
+  }
+
+  function refreshData() {
+    var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
+    var defaultZoomLevel = 7;
+
+    var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
+
     map.setCenter(
       centerLonLat.transform(
         olProjection,
@@ -90,13 +96,6 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
       ),
       defaultZoomLevel
     );
-
-    bindEvents();
-
-    refreshData();
-  }
-
-  function refreshData() {
 
     forecastIO.gettingCurrentWeather(currentLocationLatitude, currentLocationLongitude).done(function(weather) {
       var availableIcons = [
