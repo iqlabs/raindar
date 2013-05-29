@@ -27,31 +27,39 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
   var layerAnimationInterval;
   var layerAnimationCounter = 0;
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        currentLocationLatitude = position.coords.latitude;
-        currentLocationLongitude = position.coords.longitude;
-        geocoding.gettingCity(currentLocationLatitude, currentLocationLongitude).done(function (city) {
-          currentCity = city;
-          setUpMap();
-        }).fail(function () {
-          setUpMap();
-        });
+  gettingCurrentLocation().always(reverseGeocodeAndSetUpMap);
 
-      },
-      function(error) {
-        var errors = {
-          1: 'Permission denied',
-          2: 'Position unavailable',
-          3: 'Request timeout'
-        };
-        setUpMap();
-      }
-    );
+  function gettingCurrentLocation() {
+    var deferred = jQuery.Deferred();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          currentLocationLatitude = position.coords.latitude;
+          currentLocationLongitude = position.coords.longitude;
+          deferred.resolve();
+        },
+        function(error) {
+          var errors = {
+            1: 'Permission denied',
+            2: 'Position unavailable',
+            3: 'Request timeout'
+          };
+          deferred.reject(error);
+        }
+      );
+    }
+    else {
+      deferred.reject();
+    }
+    return deferred.promise();
   }
-  else {
-    setUpMap();
+
+  function reverseGeocodeAndSetUpMap() {
+    geocoding.gettingCity(currentLocationLatitude, currentLocationLongitude)
+    .done(function(city) {
+      currentCity = city;
+    })
+    .always(setUpMap);
   }
 
   function setUpMap() {
