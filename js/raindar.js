@@ -21,6 +21,9 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
   var googleMapsLayerStreet, googleMapsLayerSatellite;
   var radarLayers = [];
   var times = [];
+  var projection = 'EPSG:4326';
+  var olProjection = new OpenLayers.Projection(projection);
+  var map;
 
   var eventsbound = false;
 
@@ -31,9 +34,9 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
         currentLocationLongitude = position.coords.longitude;
         geocoding.gettingCity(currentLocationLatitude, currentLocationLongitude).done(function (city) {
           currentCity = city;
-          refreshData();
+          setUpMap();
         }).fail(function () {
-          refreshData();
+          setUpMap();
         });
 
       },
@@ -43,11 +46,53 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
           2: 'Position unavailable',
           3: 'Request timeout'
         };
-        refreshData();
+        setUpMap();
       }
     );
   }
   else {
+    setUpMap();
+  }
+
+  function setUpMap() {
+    var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
+    var defaultZoomLevel = 7;
+
+    var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
+
+    map = new OpenLayers.Map(
+      'map',
+      {
+        controls: [
+          new OpenLayers.Control.Navigation({
+            dragPanOptions: {
+                enableKinetic: true
+            }
+          }),
+          new OpenLayers.Control.Zoom(
+            {
+              zoomInId: 'buttonZoomIn',
+              zoomOutId: 'buttonZoomOut'
+            }
+          )
+        ]
+      }
+    );
+
+    googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
+    googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
+
+    map.addLayer(googleMapsLayerStreet);
+    map.addLayer(googleMapsLayerSatellite);
+
+    map.setCenter(
+      centerLonLat.transform(
+        olProjection,
+        map.getProjectionObject()
+      ),
+      defaultZoomLevel
+    );
+
     refreshData();
   }
 
@@ -89,50 +134,10 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
 
     // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
-    var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
-    var defaultZoomLevel = 7;
-    var projection = 'EPSG:4326';
-
     var northWestBoundData = [-12.0, 48.0];
     var southEastBoundData = [5.0, 61.0];
     var widthImageData = 500;
     var heightImageData = 500;
-
-    var olProjection = new OpenLayers.Projection(projection);
-    var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
-
-    var map = new OpenLayers.Map(
-      'map',
-      {
-        controls: [
-          new OpenLayers.Control.Navigation({
-            dragPanOptions: {
-                enableKinetic: true
-            }
-          }),
-          new OpenLayers.Control.Zoom(
-            {
-              zoomInId: 'buttonZoomIn',
-              zoomOutId: 'buttonZoomOut'
-            }
-          )
-        ]
-      }
-    );
-
-    googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-    googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
-
-    map.addLayer(googleMapsLayerStreet);
-    map.addLayer(googleMapsLayerSatellite);
-
-    map.setCenter(
-      centerLonLat.transform(
-        olProjection,
-        map.getProjectionObject()
-      ),
-      defaultZoomLevel
-    );
 
     // Define the Datapoint layer bounding box
     // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
@@ -200,6 +205,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
     });
 
     jQuery('#button-play').on('click', function() {
+      jQuery(this).attr('disabled', 'disabled');
       var counter = 0;
       var radarLayersLength = radarLayers.length;
       radarLayers[radarLayersLength - 1].setVisibility(false);
@@ -215,6 +221,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
           jQuery('#info-location-time-wrapper .time').html(timeString(times[counter]));
           jQuery('#info-location-time-wrapper .date').html(dateString(times[counter]));
           if (counter === radarLayersLength-1) {
+            jQuery(this).removeAttr('disabled');
             clearInterval(interval);
           }
           else {
