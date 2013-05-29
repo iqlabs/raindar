@@ -234,19 +234,28 @@ html, body {
   -khtml-border-radius: 20px;
   border-radius: 20px;
   background-color: white;
-  font-size: 0.6em;
-  left: 15%;
-  top: 15%;
-  padding: 5%;
-  width: 60%;
+  font-size: 0.8em;
+  line-height: 1.4;
+  top: 4%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  overflow: auto;
   z-index: 1000;
   @media screen and (min-width: 30em) {
-    font-size: 0.8em;
+    font-size: 0.9em;
+    top: 15%;
+    overflow: auto;
+    height: 70%;
   }
   @media screen and (min-width: 60em) {
     font-size: 1.2em;
-    left: 25%;
-    width: 40%;
+    left: 10%;
+    top: 15%;
+    width: 80%;
+  }
+  #about-screen-text {
+    padding: 5%;
   }
   h1 {
     margin-bottom: 10px;
