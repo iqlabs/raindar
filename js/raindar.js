@@ -150,6 +150,10 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
 
     met.gettingURLsAndTimes().done(function(data) {
       times = data.times;
+      jQuery.each(radarLayers, function(index, layer) {
+        map.removeLayer(radarLayers[index]);
+      });
+      radarLayers = [];
       jQuery.each(data.images_urls, function(index, url) {
         radarLayers[index] = new OpenLayers.Layer.Image(
           "Datapoint Composite Radar",
@@ -225,6 +229,10 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
           }
         }, 300
       );
+    });
+
+    jQuery('#button-refresh-data').on('click', function() {
+      refreshData();
     });
   }
 

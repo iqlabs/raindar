@@ -11,6 +11,7 @@
 @image-zoom-idle: '@{assets-directory}/zoom.png';
 @image-zoom-in: '@{assets-directory}/zoom-in-button.png';
 @image-zoom-out: '@{assets-directory}/zoom-out-button.png';
+@image-refresh: '@{assets-directory}/refresh-icon.png';
 
 .bars () {
   background: rgba(218, 218, 218, 0.8);
@@ -197,6 +198,16 @@ html, body {
   }
 }
 
+#button-refresh-data {
+  background-image: url('@{image-refresh}');
+  position: absolute;
+  height: 23px;
+  width: 23px;
+  z-index: 999;
+  right: 10px;
+  bottom: 52px;
+}
+
 @media screen and (max-width: 20em) {
   #info-wind-speed-wrapper {
     width: 25%;
@@ -226,5 +237,10 @@ html, body {
   #playback-bar {
     bottom: auto;
     width: 33%;
+  }
+
+  #button-refresh-data {
+    top: 10px;
+    left: 35%;
   }
 }
