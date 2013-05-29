@@ -4,6 +4,7 @@ module.exports = function(grunt) {
       package: grunt.file.readJSON('package.json'),
       src: {
         bower_dir: 'third_party',
+        css_dir: 'css',
         javascript_dir: 'js',
         build_dir: 'build'
       }
@@ -26,7 +27,7 @@ module.exports = function(grunt) {
           fileExclusionRegExp: /^\.|node_modules|Gruntfile\.js|bower\.json|package\.json|sublime/,
           paths: {
             OpenLayers: 'empty:',
-            requireLib: '../third_party/requirejs/require'
+            requireLib: '../<%= meta.src.bower_dir %>/requirejs/require'
           },
           removeCombined: true,
           modules: [
@@ -45,7 +46,7 @@ module.exports = function(grunt) {
           dumpLineNumbers: 'all'
         },
         files: {
-          'raindar.css': 'css/**/*'
+          'raindar.css': '<%= meta.src.css_dir %>/**/*'
         }
       },
       production: {
@@ -53,7 +54,7 @@ module.exports = function(grunt) {
           yuicompress: true
         },
         files: {
-          '<%= meta.src.build_dir %>/raindar.css': 'css/**/*'
+          '<%= meta.src.build_dir %>/raindar.css': '<%= meta.src.css_dir %>/**/*'
         }
       }
     },
