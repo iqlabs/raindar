@@ -245,6 +245,11 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
           jQuery('#info-location-time-wrapper .time').html(timeString(times[nextLayer]));
           jQuery('#info-location-time-wrapper .date').html(dateString(times[nextLayer]));
           layerAnimationCounter = nextLayer;
+          if (layerAnimationCounter === layersNumber) {
+            if ($play_button.hasClass('playing')) {
+              jQuery('#button-play').trigger('click');
+            }
+          }
         }, 300
       );
     });
