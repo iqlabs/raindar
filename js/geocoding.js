@@ -11,7 +11,7 @@ define(['jQuery', 'google'], function(jQuery, google) {
       if (status == google.maps.GeocoderStatus.OK) {
         jQuery.each(results, function(index, result) {
           jQuery.each(result.types, function(index, type) {
-            if (type === 'locality') {
+            if (type === 'locality' || type === 'neighborhood') {
               city = result.address_components[index].short_name;
               isCityFound = true;
               return false;
