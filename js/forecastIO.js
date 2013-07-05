@@ -11,7 +11,7 @@ define(['jQuery'], function(jQuery) {
 
     forecastIOUrl[2] = [latitude, longitude].join(',');
 
-    var forecastIOUrlString = forecastIOUrl.join('/') + '?units=si&exclude=daily,flags,hourly,minutely';
+    var forecastIOUrlString = forecastIOUrl.join('/') + '?units=ca&exclude=daily,flags,hourly,minutely';
 
     jQuery.ajax(
       {url: forecastIOUrlString, dataType:'jsonp'}
