@@ -102,7 +102,7 @@ define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], fun
 
   function refreshData() {
     var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
-    var defaultZoomLevel = 7;
+    var defaultZoomLevel = 6;
 
     var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
 
