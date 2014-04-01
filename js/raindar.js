@@ -13,262 +13,265 @@ requirejs.config({
     }
   }
 });
+var raindar = raindar || {};
 
 define(['jQuery', 'google', 'OpenLayers', 'geocoding', 'forecastIO', 'met'], function(jQuery, google, OpenLayers, geocoding, forecastIO, met) {
-  var currentLocationLatitude = 52.6675;
-  var currentLocationLongitude = -8.6261;
-  var currentCity = '???';
-  var googleMapsLayerStreet, googleMapsLayerSatellite;
-  var radarLayers = [];
-  var times = [];
-  var projection = 'EPSG:4326';
-  var olProjection = new OpenLayers.Projection(projection);
-  var map;
-  var layerAnimationInterval;
-  var layerAnimationCounter = 0;
 
-  gettingCurrentLocation().always(reverseGeocodeAndSetUpMap);
-
-  function gettingCurrentLocation() {
-    var deferred = jQuery.Deferred();
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          currentLocationLatitude = position.coords.latitude;
-          currentLocationLongitude = position.coords.longitude;
-          deferred.resolve();
+//    var currentLocationLatitude = 52.6675,
+//        currentLocationLongitude = -8.6261,
+//        currentCity,
+//        self = this;
+    return raindar = {
+        currentLocationLatitude : 52.6675,
+        currentLocationLongitude : -8.6261,
+        currentCity: 'City',
+        layerAnimationCounter : 0,
+        radarLayers: [],
+        map: {},
+        times : [],
+        init : function () {
+            this.gettingCurrentLocation().always(this.reverseGeocodeAndSetUpMap);
         },
-        function(error) {
-          var errors = {
-            1: 'Permission denied',
-            2: 'Position unavailable',
-            3: 'Request timeout'
-          };
-          deferred.reject(error);
+        gettingCurrentLocation : function () {
+            var deferred = jQuery.Deferred();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        raindar.currentLocationLatitude = position.coords.latitude;
+                        raindar.currentLocationLongitude = position.coords.longitude;
+                        deferred.resolve();
+                    },
+                    function(error) {
+                        var errors = {
+                            1: 'Permission denied',
+                            2: 'Position unavailable',
+                            3: 'Request timeout'
+                        };
+                        deferred.reject(error);
+                    }
+                );
+            }
+            else {
+                deferred.reject();
+            }
+            return deferred.promise();
+        },
+        reverseGeocodeAndSetUpMap : function () {
+            geocoding.gettingCity(raindar.currentLocationLatitude, raindar.currentLocationLongitude)
+                .done(function(city) {
+                    raindar.currentCity = city;
+                })
+                .always(raindar.setUpMap);
+        },
+        setUpMap : function () {
+
+            var googleMapsLayerStreet, googleMapsLayerSatellite;
+//            var radarLayers = [];
+            var projection = 'EPSG:4326';
+            var olProjection = new OpenLayers.Projection(projection);
+//            var layerAnimationInterval;
+//            var layerAnimationCounter = 0;
+            raindar.map = new OpenLayers.Map(
+                'map',
+                {
+                    controls: [
+                        new OpenLayers.Control.Navigation({
+                            dragPanOptions: {
+                                enableKinetic: true
+                            }
+                        }),
+                        new OpenLayers.Control.Zoom(
+                            {
+                                zoomInId: 'buttonZoomIn',
+                                zoomOutId: 'buttonZoomOut'
+                            }
+                        )
+                    ]
+                });
+            googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
+            googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
+
+            raindar.map.addLayer(googleMapsLayerStreet);
+            raindar.map.addLayer(googleMapsLayerSatellite);
+
+            var markers = new OpenLayers.Layer.Markers("Markers");
+            var size = new OpenLayers.Size(21,25);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('assets/location-icon.png',size,offset);
+            markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(raindar.currentLocationLongitude, raindar.currentLocationLatitude).transform(olProjection, raindar.map.getProjectionObject()),icon));
+            raindar.map.addLayer(markers);
+
+            raindar.bindEvents();
+
+            raindar.refreshData(olProjection);
+        },
+        refreshData : function (olProjection) {
+            var centerCoordinates = [raindar.currentLocationLongitude, raindar.currentLocationLatitude];
+            var defaultZoomLevel = 8;
+            var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
+
+            raindar.map.setCenter(
+                centerLonLat.transform(
+                    olProjection,
+                    raindar.map.getProjectionObject()
+                ),
+                defaultZoomLevel
+            );
+
+            forecastIO.gettingCurrentWeather(raindar.currentLocationLatitude, raindar.currentLocationLongitude).done(function(weather) {
+                var availableIcons = [
+                    'clear-day',
+                    'clear-night',
+                    'cloudy',
+                    'fog',
+                    'partly-cloudy-day',
+                    'partly-cloudy-night',
+                    'rain',
+                    'sleet',
+                    'snow',
+                    'wind'
+                ];
+                var windBearing = typeof weather.windBearing !== 'undefined' ? parseInt(weather.windBearing, 10) : 0;
+                var windSpeed = typeof weather.windSpeed !== 'undefined' ? parseInt(weather.windSpeed, 10) : '?';
+                var weatherIcon = typeof weather.icon !== 'undefined' ? weather.icon : 'unknown';
+                if (jQuery.inArray(weatherIcon, availableIcons) === -1) {
+                    weatherIcon = 'unknown';
+                }
+                var temperature = typeof weather.temperature !== 'undefined' ? parseInt(weather.temperature, 10) : '?';
+
+                // windBearing from forecast.io is the direction where the wind is coming from, so substract 180 degrees
+                jQuery('#info-location-time-wrapper .location').html(raindar.currentCity);
+                weather.windBearing = weather.windBearing - 90;
+                jQuery('#info-wind-speed').animate({ left: 0, top: 0 }, {
+                    step: function(now, fx) {
+                        jQuery(this).css('transform','rotate('+(fx.pos * weather.windBearing)+'deg)');
+                    },
+                    duration: 1000
+                });
+                jQuery('.info-wind-speed-text').html(windSpeed + ' km/h');
+                jQuery('#info-weather').css('background-image', 'url(assets/weather-' + weatherIcon + '.png)');
+                jQuery('.info-temperature-text').html(temperature + ' &deg;C');
+            });
+
+            // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
+            var northWestBoundData = [-12.0, 48.0];
+            var southEastBoundData = [5.0, 61.0];
+            var widthImageData = 500;
+            var heightImageData = 500;
+
+            // Define the Datapoint layer bounding box
+            // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
+            var bounds = new OpenLayers.Bounds();
+            bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(olProjection, raindar.map.getProjectionObject()));
+            bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(olProjection, raindar.map.getProjectionObject()));
+
+            // Get the Datapoint image
+            var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
+
+            met.gettingURLsAndTimes().done(function(data) {
+                raindar.times = data.times;
+                jQuery.each(raindar.radarLayers, function(index, layer) {
+                    raindar.map.removeLayer(raindar.radarLayers[index]);
+                });
+                raindar.radarLayers = [];
+                jQuery.each(data.images_urls, function(index, url) {
+                    raindar.radarLayers[index] = new OpenLayers.Layer.Image(
+                        "Datapoint Composite Radar",
+                        url,
+                        bounds,
+                        layerSize,
+                        {isBaseLayer: false, opacity: 0.65}
+                    );
+                    raindar.map.addLayer(raindar.radarLayers[index]);
+                    raindar.radarLayers[index].setVisibility(false);
+                });
+                raindar.radarLayers[raindar.radarLayers.length -1].setVisibility(true);
+                raindar.layerAnimationCounter = raindar.radarLayers.length - 1;
+                jQuery('#info-location-time-wrapper .time').html(raindar.timeString(raindar.times[raindar.radarLayers.length - 1]));
+                jQuery('#info-location-time-wrapper .date').html(raindar.dateString(raindar.times[raindar.radarLayers.length - 1]));
+            });
+        },
+        bindEvents : function () {
+            jQuery('a.button-zoom-in').on('mousedown', function() {
+                jQuery(this).parent().removeClass('out').addClass('in');
+            });
+
+            jQuery('a.button-zoom-in').on('mouseup', function() {
+                jQuery(this).parent().removeClass('out').removeClass('in');
+            });
+
+            jQuery('a.button-zoom-out').on('mousedown', function() {
+                jQuery(this).parent().removeClass('in').addClass('out');
+            });
+
+            jQuery('a.button-zoom-out').on('mouseup', function() {
+                jQuery(this).parent().removeClass('out').removeClass('in');
+            });
+
+            jQuery('a.button-to-map').on('click', function() {
+                var wrapper = jQuery(this).parent();
+                wrapper.removeClass('satellite');
+                wrapper.addClass('map');
+                googleMapsLayerStreet.setVisibility(true);
+                googleMapsLayerSatellite.setVisibility(false);
+            });
+
+            jQuery('a.button-to-satellite').on('click', function() {
+                var wrapper = jQuery(this).parent();
+                wrapper.removeClass('map');
+                wrapper.addClass('satellite');
+                googleMapsLayerSatellite.setVisibility(true);
+                googleMapsLayerStreet.setVisibility(false);
+            });
+
+            jQuery('#button-about').on('click', function() {
+                jQuery('#about-screen, #about-screen-mask').show();
+            });
+
+            jQuery('#button-play').on('click', function() {
+                var $play_button = jQuery(this);
+                if ($play_button.hasClass('playing')) {
+                    $play_button.removeClass('playing');
+                    clearInterval(layerAnimationInterval);
+                    return false;
+                }
+                $play_button.addClass('playing');
+
+                var layersNumber = raindar.radarLayers.length - 1;
+
+                var layerAnimationInterval = setInterval(
+                    function() {
+                        var isCurrentFrameLast = (raindar.layerAnimationCounter === layersNumber);
+                        var nextLayer = isCurrentFrameLast ? 0 : raindar.layerAnimationCounter + 1;
+                        raindar.radarLayers[raindar.layerAnimationCounter].setVisibility(false);
+                        raindar.radarLayers[nextLayer].setVisibility(true);
+                        jQuery('#info-location-time-wrapper .time').html(raindar.timeString(raindar.times[nextLayer]));
+                        jQuery('#info-location-time-wrapper .date').html(raindar.dateString(raindar.times[nextLayer]));
+                        raindar.layerAnimationCounter = nextLayer;
+                        if (raindar.layerAnimationCounter === layersNumber) {
+                            if ($play_button.hasClass('playing')) {
+                                jQuery('#button-play').trigger('click');
+                            }
+                        }
+                    }, 300
+                );
+            });
+
+            jQuery('#button-refresh-data').on('click', function() {
+                raindar.refreshData();
+            });
+
+            jQuery('#about-screen .close').on('click', function() {
+                jQuery('#about-screen, #about-screen-mask').hide();
+            });
+        },
+        timeString : function (input_date) {
+            return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
+        },
+        dateString : function (input_date) {
+            return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
+
         }
-      );
-    }
-    else {
-      deferred.reject();
-    }
-    return deferred.promise();
-  }
-
-  function reverseGeocodeAndSetUpMap() {
-    geocoding.gettingCity(currentLocationLatitude, currentLocationLongitude)
-    .done(function(city) {
-      currentCity = city;
-    })
-    .always(setUpMap);
-  }
-
-  function setUpMap() {
-    map = new OpenLayers.Map(
-      'map',
-      {
-        controls: [
-          new OpenLayers.Control.Navigation({
-            dragPanOptions: {
-                enableKinetic: true
-            }
-          }),
-          new OpenLayers.Control.Zoom(
-            {
-              zoomInId: 'buttonZoomIn',
-              zoomOutId: 'buttonZoomOut'
-            }
-          )
-        ]
-      }
-    );
-
-    googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-    googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
-
-    map.addLayer(googleMapsLayerStreet);
-    map.addLayer(googleMapsLayerSatellite);
-
-    var markers = new OpenLayers.Layer.Markers("Markers");
-    var size = new OpenLayers.Size(21,25);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('assets/location-icon.png',size,offset);
-    markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(currentLocationLongitude, currentLocationLatitude).transform(olProjection, map.getProjectionObject()),icon));
-    map.addLayer(markers);
-
-    bindEvents();
-
-    refreshData();
-  }
-
-  function refreshData() {
-    var centerCoordinates = [currentLocationLongitude, currentLocationLatitude];
-    var defaultZoomLevel = 6;
-
-    var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
-
-    map.setCenter(
-      centerLonLat.transform(
-        olProjection,
-        map.getProjectionObject()
-      ),
-      defaultZoomLevel
-    );
-
-    forecastIO.gettingCurrentWeather(currentLocationLatitude, currentLocationLongitude).done(function(weather) {
-      var availableIcons = [
-        'clear-day',
-        'clear-night',
-        'cloudy',
-        'fog',
-        'partly-cloudy-day',
-        'partly-cloudy-night',
-        'rain',
-        'sleet',
-        'snow',
-        'wind'
-      ];
-      var windBearing = typeof weather.windBearing !== 'undefined' ? parseInt(weather.windBearing, 10) : 0;
-      var windSpeed = typeof weather.windSpeed !== 'undefined' ? parseInt(weather.windSpeed, 10) : '?';
-      var weatherIcon = typeof weather.icon !== 'undefined' ? weather.icon : 'unknown';
-      if (jQuery.inArray(weatherIcon, availableIcons) === -1) {
-        weatherIcon = 'unknown';
-      }
-      var temperature = typeof weather.temperature !== 'undefined' ? parseInt(weather.temperature, 10) : '?';
-
-      // windBearing from forecast.io is the direction where the wind is coming from, so substract 180 degrees
-      jQuery('#info-location-time-wrapper .location').html(currentCity);
-      weather.windBearing = weather.windBearing - 180;
-      jQuery('#info-wind-speed').animate({ left: 0, top: 0 }, {
-        step: function(now, fx) {
-          jQuery(this).css('transform','rotate('+(fx.pos * weather.windBearing)+'deg)');
-        },
-        duration: 1000
-      });
-      jQuery('.info-wind-speed-text').html(windSpeed + ' km/h');
-      jQuery('#info-weather').css('background-image', 'url(assets/weather-' + weatherIcon + '.png)');
-      jQuery('.info-temperature-text').html(temperature + ' &deg;C');
-    });
-
-    // Based on example found on https://metoffice-datapoint.googlegroups.com/attach/808f7dc2715d62d7/datapoint_openlayers_example.html?gda=pIdDQ0cAAACewIa7WbYlR83d2hhWhZ6AzmKI5fq-fBVOEpWlD-o5cNAOdB2eqa_XwbgIC4Yv-ZQbQwFxJw55cVwemAxM-EWmeV4duv6pDMGhhhZdjQlNAw&view=1&part=4
-    var northWestBoundData = [-12.0, 48.0];
-    var southEastBoundData = [5.0, 61.0];
-    var widthImageData = 500;
-    var heightImageData = 500;
-
-    // Define the Datapoint layer bounding box
-    // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
-    var bounds = new OpenLayers.Bounds();
-    bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(olProjection, map.getProjectionObject()));
-    bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(olProjection, map.getProjectionObject()));
-
-    // Get the Datapoint image
-    var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
-
-    met.gettingURLsAndTimes().done(function(data) {
-      times = data.times;
-      jQuery.each(radarLayers, function(index, layer) {
-        map.removeLayer(radarLayers[index]);
-      });
-      radarLayers = [];
-      jQuery.each(data.images_urls, function(index, url) {
-        radarLayers[index] = new OpenLayers.Layer.Image(
-          "Datapoint Composite Radar",
-          url,
-          bounds,
-          layerSize,
-          {isBaseLayer: false, opacity: 0.65}
-        );
-        map.addLayer(radarLayers[index]);
-        radarLayers[index].setVisibility(false);
-      });
-      radarLayers[radarLayers.length -1].setVisibility(true);
-      layerAnimationCounter = radarLayers.length - 1;
-      jQuery('#info-location-time-wrapper .time').html(timeString(times[radarLayers.length - 1]));
-      jQuery('#info-location-time-wrapper .date').html(dateString(times[radarLayers.length - 1]));
-    });
-  }
-
-  function bindEvents() {
-    jQuery('a.button-zoom-in').on('mousedown', function() {
-      jQuery(this).parent().removeClass('out').addClass('in');
-    });
-
-    jQuery('a.button-zoom-in').on('mouseup', function() {
-      jQuery(this).parent().removeClass('out').removeClass('in');
-    });
-
-    jQuery('a.button-zoom-out').on('mousedown', function() {
-      jQuery(this).parent().removeClass('in').addClass('out');
-    });
-
-    jQuery('a.button-zoom-out').on('mouseup', function() {
-      jQuery(this).parent().removeClass('out').removeClass('in');
-    });
-
-    jQuery('a.button-to-map').on('click', function() {
-      var wrapper = jQuery(this).parent();
-      wrapper.removeClass('satellite');
-      wrapper.addClass('map');
-      googleMapsLayerStreet.setVisibility(true);
-      googleMapsLayerSatellite.setVisibility(false);
-    });
-
-    jQuery('a.button-to-satellite').on('click', function() {
-      var wrapper = jQuery(this).parent();
-      wrapper.removeClass('map');
-      wrapper.addClass('satellite');
-      googleMapsLayerSatellite.setVisibility(true);
-      googleMapsLayerStreet.setVisibility(false);
-    });
-
-    jQuery('#button-about').on('click', function() {
-      jQuery('#about-screen, #about-screen-mask').show();
-    });
-
-    jQuery('#button-play').on('click', function() {
-      var $play_button = jQuery(this);
-      if ($play_button.hasClass('playing')) {
-        $play_button.removeClass('playing');
-        clearInterval(layerAnimationInterval);
-        return false;
-      }
-      $play_button.addClass('playing');
-
-      var layersNumber = radarLayers.length - 1;
-
-      layerAnimationInterval = setInterval(
-        function() {
-          var isCurrentFrameLast = (layerAnimationCounter === layersNumber);
-          var nextLayer = isCurrentFrameLast ? 0 : layerAnimationCounter + 1;
-          radarLayers[layerAnimationCounter].setVisibility(false);
-          radarLayers[nextLayer].setVisibility(true);
-          jQuery('#info-location-time-wrapper .time').html(timeString(times[nextLayer]));
-          jQuery('#info-location-time-wrapper .date').html(dateString(times[nextLayer]));
-          layerAnimationCounter = nextLayer;
-          if (layerAnimationCounter === layersNumber) {
-            if ($play_button.hasClass('playing')) {
-              jQuery('#button-play').trigger('click');
-            }
-          }
-        }, 300
-      );
-    });
-
-    jQuery('#button-refresh-data').on('click', function() {
-      refreshData();
-    });
-
-    jQuery('#about-screen .close').on('click', function() {
-      jQuery('#about-screen, #about-screen-mask').hide();
-    });
-  }
-
-  function timeString(input_date) {
-    return [('0' + input_date.getHours()).slice(-2), ('0' + input_date.getMinutes()).slice(-2)].join(':');
-  }
-
-  function dateString(input_date) {
-    return [input_date.getDate(), (input_date.getMonth() + 1), input_date.getFullYear()].join('.');
-  }
+    };
 
 });
