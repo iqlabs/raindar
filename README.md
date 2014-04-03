@@ -24,3 +24,11 @@ To initialize the application
 To build the application for production deployment
 
 `grunt build`
+
+### Run from development
+
+Run index-dev.html
+
+### Run concatenated and uglified production version
+
+Run build/index.html
