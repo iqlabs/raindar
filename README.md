@@ -12,12 +12,15 @@ Ciarán, Mario, Nick & Amanda at iQ Content did this exploration as part of iQ L
 
 ## Installation
 Clone from Github
+
 `clone git@github.com:iqlabs/raindar.git`
 
 There are a number of grunt tasks set up to assist you with initialization, development and build:
 
 To initialize the application
+
 `grunt init`
 
 To build the application for production deployment
+
 `grunt build`
