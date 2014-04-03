@@ -1,30 +1,26 @@
 requirejs.config({
   paths: {
     async: '../third_party/requirejs-plugins/async',
-    jQuery: '../third_party/jquery/jquery',
-//    OpenLayers: '../third_party/openlayers/lib/OpenLayers'
-//    OpenLayers: 'http://openlayers.org/api/OpenLayers'
+    jQuery: '../third_party/jquery/jquery'
   },
   shim: {
     jQuery: {
       exports: 'jQuery'
     }
-//    OpenLayers: {
-//      exports: 'OpenLayers'
-//    }
   }
 });
 
 define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, google, geocoding, forecastIO, met) {
     "use strict";
-debugger
+
     var raindar = {
-        currentLocationLatitude : 52.6675,
+        currentLocationLatitude : 52.6675, // TODO : move appropriate properties to config file
         currentLocationLongitude : -8.6261,
         currentCity: 'City',
         layerAnimationCounter : 0,
         radarLayers: [],
         map: {},
+        olProjection: {},
         times : [],
         googleMapsLayerStreet : null,
         googleMapsLayerSatellite : null,
@@ -68,7 +64,7 @@ debugger
 //            var googleMapsLayerStreet, googleMapsLayerSatellite;
 //            var radarLayers = [];
             var projection = 'EPSG:4326';
-            var olProjection = new OpenLayers.Projection(projection);
+            raindar.olProjection = new OpenLayers.Projection(projection);
 //            var layerAnimationInterval;
 //            var layerAnimationCounter = 0;
             raindar.map = new OpenLayers.Map(
@@ -98,22 +94,22 @@ debugger
             var size = new OpenLayers.Size(21,25);
             var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
             var icon = new OpenLayers.Icon('assets/location-icon.png',size,offset);
-            markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(raindar.currentLocationLongitude, raindar.currentLocationLatitude).transform(olProjection, raindar.map.getProjectionObject()),icon));
+            markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(raindar.currentLocationLongitude, raindar.currentLocationLatitude).transform(raindar.olProjection, raindar.map.getProjectionObject()),icon));
             raindar.map.addLayer(markers);
 
             raindar.bindEvents();
 
-            raindar.refreshData(olProjection);
+            raindar.refreshData();
         },
-        refreshData : function (olProjection) {
-            debugger
+        refreshData : function () {
+            
             var centerCoordinates = [raindar.currentLocationLongitude, raindar.currentLocationLatitude];
             var defaultZoomLevel = 8;
             var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
 
             raindar.map.setCenter(
                 centerLonLat.transform(
-                    olProjection,
+                    raindar.olProjection,
                     raindar.map.getProjectionObject()
                 ),
                 defaultZoomLevel
@@ -163,8 +159,8 @@ debugger
             // Define the Datapoint layer bounding box
             // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
             var bounds = new OpenLayers.Bounds();
-            bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(olProjection, raindar.map.getProjectionObject()));
-            bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(olProjection, raindar.map.getProjectionObject()));
+            bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(raindar.olProjection, raindar.map.getProjectionObject()));
+            bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(raindar.olProjection, raindar.map.getProjectionObject()));
 
             // Get the Datapoint image
             var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
