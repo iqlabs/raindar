@@ -15,6 +15,10 @@ Clone from Github
 
 `clone git@github.com:iqlabs/raindar.git`
 
+Install node modules in root directory
+
+`npm install`
+
 There are a number of grunt tasks set up to assist you with initialization, development and build:
 
 To initialize the application
