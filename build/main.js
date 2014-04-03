@@ -1,0 +1,1 @@
+requirejs.config({paths:{async:"../third_party/requirejs-plugins/async",jQuery:"../third_party/jquery/jquery",raindarJS:"raindar"},shim:{jQuery:{exports:"jQuery"}}});var Raindar=Raindar||{};define(["jQuery","raindar"],function(e,t){Raindar.app=t,Raindar.app.start()});
