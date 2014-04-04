@@ -4,14 +4,21 @@
     <title>Raindar v2.0a</title>
     <meta charset="utf-8">
     <meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link href='http://fonts.googleapis.com/css?family=Arvo|Arvo:700' rel='stylesheet' type='text/css'>
-        <script type="text/javascript" src="third_party/openlayers/lib/OpenLayers.js"></script>
-      <script type="text/javascript" data-main="js/main" src="third_party/requirejs/require.js"></script>
-      <!--<script type="text/javascript" data-main="raindar" src="js/raindar.js"></script>-->
-      <!-- @endif -->
 
-      <!-- @if NODE_ENV != 'production' -->
-      <link type="text/css" rel="stylesheet" href="raindar.css" />
+    <!-- @if NODE_ENV = 'production' -->
+    <style>
+      <!-- @include raindar.css -->
+    </style>
+    <script type="text/javascript" data-main="raindar">
+      <!-- @include raindar.js -->
+    </script>
+    <!-- @endif -->
+
+    <!-- @if NODE_ENV != 'production' -->
+    <link type="text/css" rel="stylesheet" href="raindar.css" />
+    <script type="text/javascript" data-main="js/raindar" src="third_party/requirejs/require.js"></script>
     <!-- @endif -->
   </head>
   <body>

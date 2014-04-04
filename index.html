@@ -4,20 +4,16 @@
     <title>Raindar v2.0a</title>
     <meta charset="utf-8">
     <meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
     <link href='http://fonts.googleapis.com/css?family=Arvo|Arvo:700' rel='stylesheet' type='text/css'>
+      <script type="text/javascript" src="third_party/openlayers/lib/OpenLayers.js"></script>
+      <script type="text/javascript" data-main="js/main" src="third_party/requirejs/require.js"></script>
+      <!--<script type="text/javascript" data-main="raindar" src="js/raindar.js"></script>-->
+      <!-- @endif -->
 
-    <!-- @if NODE_ENV = 'production' -->
-    <style>
-      <!-- @include raindar.css -->
-    </style>
-    <script type="text/javascript" data-main="raindar">
-      <!-- @include raindar.js -->
-    </script>
-    <!-- @endif -->
-
-    <!-- @if NODE_ENV != 'production' -->
-    <link type="text/css" rel="stylesheet" href="raindar.css" />
-    <script type="text/javascript" data-main="js/raindar" src="third_party/requirejs/require.js"></script>
+      <!-- @if NODE_ENV != 'production' -->
+      <link type="text/css" rel="stylesheet" href="raindar.css" />
     <!-- @endif -->
   </head>
   <body>
@@ -43,20 +39,17 @@
         <div id="button-play" class="image"></div>
       </div>
       <div id="info-location-time-wrapper" class="wrapper">
-        <div class="info-location-time-text text wrapper time">??:??</div>
-        <div class="info-location-time-text text wrapper location">????</div>
-        <div class="info-location-time-text text wrapper date">??.??.????</div>
+          <div class="info-location-time-text text wrapper time"></div>
+          <div class="info-location-time-text text wrapper location">Loading...</div>
+          <div class="info-location-time-text text wrapper date"></div>
       </div>
-      <div id="button-about-wrapper" class="wrapper">
-        <div id="button-about" class="image"></div>
-      </div>
+      <div id="button-refresh-data"></div>
     </div>
     <div id="button-zoom">
       <a id="buttonZoomIn" class="button-zoom-in" href="#"></a>
       <a id="buttonZoomOut" class="button-zoom-out" href="#"></a>
     </div>
-    <div id="button-refresh-data">
-    </div>
+    <div id="button-about" class="image"></div>
     <div id="map">
       <noscript>
         Alternative static content goes here

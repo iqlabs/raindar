@@ -14,9 +14,9 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
     "use strict";
 
     var raindar = {
-        currentLocationLatitude : 52.6675, // TODO : move appropriate properties to config file
-        currentLocationLongitude : -8.6261,
-        currentCity: 'City',
+        currentLocationLatitude : 53.34116, // TODO : having moved variables out of the global scope, I need to move appropriate properties to config file
+        currentLocationLongitude : -6.262257,
+        currentCity: 'Loading...',
         layerAnimationCounter : 0,
         radarLayers: [],
         map: {},
@@ -30,25 +30,32 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
         },
         gettingCurrentLocation : function () {
             var deferred = jQuery.Deferred();
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        raindar.currentLocationLatitude = position.coords.latitude;
-                        raindar.currentLocationLongitude = position.coords.longitude;
-                        deferred.resolve();
-                    },
-                    function(error) {
-                        var errors = {
-                            1: 'Permission denied',
-                            2: 'Position unavailable',
-                            3: 'Request timeout'
-                        };
-                        deferred.reject(error);
-                    }
-                );
-            }
-            else {
-                deferred.reject();
+//debugger
+            if (localStorage.currentLocationLatitude && localStorage.currentLocationLongitude) {
+                raindar.currentLocationLatitude = localStorage.currentLocationLatitude;
+                raindar.currentLocationLongitude = localStorage.currentLocationLongitude;
+                deferred.resolve();
+            } else {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            localStorage.currentLocationLatitude = position.coords.latitude;
+                            localStorage.currentLocationLongitude = position.coords.longitude;
+                            deferred.resolve();
+                        },
+                        function(error) {
+                            var errors = {
+                                1: 'Permission denied',
+                                2: 'Position unavailable',
+                                3: 'Request timeout'
+                            };
+                            deferred.reject(error);
+                        }
+                    );
+                }
+                else {
+                    deferred.reject();
+                }
             }
             return deferred.promise();
         },
@@ -61,12 +68,9 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
         },
         setUpMap : function () {
 
-//            var googleMapsLayerStreet, googleMapsLayerSatellite;
-//            var radarLayers = [];
             var projection = 'EPSG:4326';
             raindar.olProjection = new OpenLayers.Projection(projection);
-//            var layerAnimationInterval;
-//            var layerAnimationCounter = 0;
+
             raindar.map = new OpenLayers.Map(
                 'map',
                 {
@@ -102,7 +106,7 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
             raindar.refreshData();
         },
         refreshData : function () {
-            
+
             var centerCoordinates = [raindar.currentLocationLongitude, raindar.currentLocationLatitude];
             var defaultZoomLevel = 8;
             var centerLonLat = new OpenLayers.LonLat(centerCoordinates);

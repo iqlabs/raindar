@@ -81,7 +81,7 @@ module.exports = function (grunt) {
         jshint: {
             all: ['Gruntfile.js', 'js/*.js']
         }
-    })
+    });
 
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-requirejs');
@@ -100,7 +100,7 @@ module.exports = function (grunt) {
                 grunt.file.copy(src, build_dir + '/' + src);
             }
         });
-        grunt.file.copy('index.html', build_dir + '/index.html');
+        grunt.file.copy('build.html', build_dir + '/index.html');
     });
 
     grunt.registerTask('remove_from_build', function () {

@@ -171,16 +171,32 @@ html, body {
       font-size: 0.7em;
     }
   }
-  #button-about-wrapper {
+  #button-refresh-data {
+    background-image: url('@{image-refresh}');
     position: absolute;
     right: 10px;
     top: 10px;
-    #button-about {
-      background-image: url('@{image-about}');
-      height: 22px;
-      width: 22px;
-    }
+    height: 23px;
+    width: 23px;
+    z-index: 999;
   }
+}
+//  #button-refresh-data {
+//    background-image: url('@{image-refresh}');
+//    position: absolute;
+//    height: 23px;
+//    width: 23px;
+//    z-index: 999;
+//    right: 10px;
+//    bottom: 52px;
+//  }
+#button-about {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-image: url('@{image-about}');
+  height: 22px;
+  width: 22px;
 }
 
 #button-zoom {
@@ -211,16 +227,6 @@ html, body {
     width: 26px;
     position: absolute;
   }
-}
-
-#button-refresh-data {
-  background-image: url('@{image-refresh}');
-  position: absolute;
-  height: 23px;
-  width: 23px;
-  z-index: 999;
-  right: 10px;
-  bottom: 52px;
 }
 
 #about-screen-mask{
@@ -354,8 +360,9 @@ html, body {
     width: 33%;
   }
 
-  #button-refresh-data {
+  #button-about {
     top: 10px;
     left: 35%;
+    z-index: 999;
   }
 }
