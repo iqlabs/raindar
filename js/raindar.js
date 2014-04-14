@@ -30,18 +30,23 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
         },
         gettingCurrentLocation : function () {
             var deferred = jQuery.Deferred();
-//debugger
+
             if (localStorage.currentLocationLatitude && localStorage.currentLocationLongitude) {
                 raindar.currentLocationLatitude = localStorage.currentLocationLatitude;
                 raindar.currentLocationLongitude = localStorage.currentLocationLongitude;
                 deferred.resolve();
+                console.log('localstorage '+localStorage.currentLocationLatitude);
             } else {
+
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         function(position) {
                             localStorage.currentLocationLatitude = position.coords.latitude;
                             localStorage.currentLocationLongitude = position.coords.longitude;
+                            raindar.currentLocationLatitude = position.coords.latitude;
+                            raindar.currentLocationLongitude = position.coords.longitude;
                             deferred.resolve();
+                            return deferred.promise();
                         },
                         function(error) {
                             var errors = {
@@ -56,6 +61,7 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 else {
                     deferred.reject();
                 }
+
             }
             return deferred.promise();
         },
@@ -67,7 +73,6 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 .always(raindar.setUpMap);
         },
         setUpMap : function () {
-
             var projection = 'EPSG:4326';
             raindar.olProjection = new OpenLayers.Projection(projection);
 
@@ -85,7 +90,14 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                                 zoomInId: 'buttonZoomIn',
                                 zoomOutId: 'buttonZoomOut'
                             }
-                        )
+                        ),
+                        new OpenLayers.Control.CacheWrite({
+                            autoActivate: true,
+                            eventListeners: {
+                                cachefull: function() {console.log('cache full');
+                                }
+                            }
+                        })
                     ]
                 });
             raindar.googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
@@ -94,6 +106,27 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
             raindar.map.addLayer(raindar.googleMapsLayerStreet);
             raindar.map.addLayer(raindar.googleMapsLayerSatellite);
 
+            raindar.map.layers[0].events.on({'tileloaded': function(){console.log('tiles loaded!!!!');} });
+
+//            var cacheWrite = new OpenLayers.Control.CacheWrite({
+//                autoActivate: true,
+//                eventListeners: {
+//                    cachefull: function() {console.log('cache full');
+//                    }
+//                }
+//            });
+//            raindar.map.addControl(cacheWrite);
+
+            raindar.bindEvents();
+
+            raindar.refreshData();
+        },
+        addMarkers : function () {
+
+            // Remove any existing markers first
+            if (Raindar.app.map.getLayersByClass('OpenLayers.Layer.Markers').length) {
+                Raindar.app.map.removeLayer(Raindar.app.map.getLayersByClass('OpenLayers.Layer.Markers')[0]);
+            }
             var markers = new OpenLayers.Layer.Markers("Markers");
             var size = new OpenLayers.Size(21,25);
             var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
@@ -101,12 +134,8 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
             markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(raindar.currentLocationLongitude, raindar.currentLocationLatitude).transform(raindar.olProjection, raindar.map.getProjectionObject()),icon));
             raindar.map.addLayer(markers);
 
-            raindar.bindEvents();
-
-            raindar.refreshData();
         },
         refreshData : function () {
-
             var centerCoordinates = [raindar.currentLocationLongitude, raindar.currentLocationLatitude];
             var defaultZoomLevel = 8;
             var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
@@ -118,6 +147,8 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 ),
                 defaultZoomLevel
             );
+
+            raindar.addMarkers();
 
             forecastIO.gettingCurrentWeather(raindar.currentLocationLatitude, raindar.currentLocationLongitude).done(function(weather) {
                 var availableIcons = [
@@ -258,8 +289,9 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 );
             });
 
-            jQuery('#button-refresh-data').on('click', function() {
-                raindar.refreshData();
+            jQuery('#button-refresh-data, .info-location-time-text').on('click', function() {
+                localStorage.clear();
+                raindar.gettingCurrentLocation().then(raindar.refreshData);
             });
 
             jQuery('#about-screen .close').on('click', function() {
