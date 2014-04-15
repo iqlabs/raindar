@@ -589,41 +589,34 @@ body {
   #info-temperature-wrapper {
     width: 14%;
   }
-  /* line 338, /Users/nickrogers/Workspace/raindar/css/raindar.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003338}}
-  #button-about {
-    bottom: 56px;
-    left: 35%;
-    z-index: 999;
-  }
 }
 @media screen and (min-width: 60em) {
-  /* line 348, /Users/nickrogers/Workspace/raindar/css/raindar.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003348}}
+  /* line 341, /Users/nickrogers/Workspace/raindar/css/raindar.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003341}}
   #menu-bar {
     font-size: 1em;
     position: absolute;
     right: 0;
     width: 33%;
   }
-  /* line 353, /Users/nickrogers/Workspace/raindar/css/raindar.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003353}}
+  /* line 346, /Users/nickrogers/Workspace/raindar/css/raindar.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003346}}
   #menu-bar #info-weather-wrapper {
     width: 15%;
   }
-  /* line 356, /Users/nickrogers/Workspace/raindar/css/raindar.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003356}}
+  /* line 349, /Users/nickrogers/Workspace/raindar/css/raindar.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003349}}
   #menu-bar #info-temperature-wrapper {
     width: 15%;
   }
-  /* line 361, /Users/nickrogers/Workspace/raindar/css/raindar.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003361}}
+  /* line 354, /Users/nickrogers/Workspace/raindar/css/raindar.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003354}}
   #playback-bar {
     bottom: auto;
     width: 33%;
   }
-  /* line 366, /Users/nickrogers/Workspace/raindar/css/raindar.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003366}}
+  /* line 359, /Users/nickrogers/Workspace/raindar/css/raindar.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/nickrogers\/Workspace\/raindar\/css\/raindar\.less}line{font-family:\00003359}}
   #button-about {
     top: 10px;
     left: 35%;
