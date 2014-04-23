@@ -13,7 +13,7 @@ requirejs.config({
 define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, google, geocoding, forecastIO, met) {
     "use strict";
 
-    var raindar = {
+    var Raindar = {
         currentLocationLatitude : 53.34116, // TODO : having moved variables out of the global scope, I need to move appropriate properties to config file
         currentLocationLongitude : -6.262257,
         currentCity: 'Loading...',
@@ -32,10 +32,9 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
             var deferred = jQuery.Deferred();
 
             if (localStorage.currentLocationLatitude && localStorage.currentLocationLongitude) {
-                raindar.currentLocationLatitude = localStorage.currentLocationLatitude;
-                raindar.currentLocationLongitude = localStorage.currentLocationLongitude;
+                Raindar.currentLocationLatitude = localStorage.currentLocationLatitude;
+                Raindar.currentLocationLongitude = localStorage.currentLocationLongitude;
                 deferred.resolve();
-                console.log('localstorage '+localStorage.currentLocationLatitude);
             } else {
 
                 if (navigator.geolocation) {
@@ -43,8 +42,8 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                         function(position) {
                             localStorage.currentLocationLatitude = position.coords.latitude;
                             localStorage.currentLocationLongitude = position.coords.longitude;
-                            raindar.currentLocationLatitude = position.coords.latitude;
-                            raindar.currentLocationLongitude = position.coords.longitude;
+                            Raindar.currentLocationLatitude = position.coords.latitude;
+                            Raindar.currentLocationLongitude = position.coords.longitude;
                             deferred.resolve();
                             return deferred.promise();
                         },
@@ -66,17 +65,17 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
             return deferred.promise();
         },
         reverseGeocodeAndSetUpMap : function () {
-            geocoding.gettingCity(raindar.currentLocationLatitude, raindar.currentLocationLongitude)
+            geocoding.gettingCity(Raindar.currentLocationLatitude, Raindar.currentLocationLongitude)
                 .done(function(city) {
-                    raindar.currentCity = city;
+                    Raindar.currentCity = city;
                 })
-                .always(raindar.setUpMap);
+                .always(Raindar.setUpMap);
         },
         setUpMap : function () {
             var projection = 'EPSG:4326';
-            raindar.olProjection = new OpenLayers.Projection(projection);
+            Raindar.olProjection = new OpenLayers.Projection(projection);
 
-            raindar.map = new OpenLayers.Map(
+            Raindar.map = new OpenLayers.Map(
                 'map',
                 {
                     controls: [
@@ -100,57 +99,48 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                         })
                     ]
                 });
-            raindar.googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
-            raindar.googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
+            Raindar.googleMapsLayerStreet = new OpenLayers.Layer.Google("Google Streets",{numZoomLevels: 20});
+            Raindar.googleMapsLayerSatellite = new OpenLayers.Layer.Google("Google Hybrid",{type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false});
 
-            raindar.map.addLayer(raindar.googleMapsLayerStreet);
-            raindar.map.addLayer(raindar.googleMapsLayerSatellite);
+            Raindar.map.addLayer(Raindar.googleMapsLayerStreet);
+            Raindar.map.addLayer(Raindar.googleMapsLayerSatellite);
 
-            raindar.map.layers[0].events.on({'tileloaded': function(){console.log('tiles loaded!!!!');} });
+            Raindar.map.layers[0].events.on({'tileloaded': function(){console.log('tiles loaded!!!!');} });
 
-//            var cacheWrite = new OpenLayers.Control.CacheWrite({
-//                autoActivate: true,
-//                eventListeners: {
-//                    cachefull: function() {console.log('cache full');
-//                    }
-//                }
-//            });
-//            raindar.map.addControl(cacheWrite);
+            Raindar.bindEvents();
 
-            raindar.bindEvents();
-
-            raindar.refreshData();
+            Raindar.refreshData();
         },
         addMarkers : function () {
 
             // Remove any existing markers first
-            if (Raindar.app.map.getLayersByClass('OpenLayers.Layer.Markers').length) {
-                Raindar.app.map.removeLayer(Raindar.app.map.getLayersByClass('OpenLayers.Layer.Markers')[0]);
+            if (Raindar.map.getLayersByClass('OpenLayers.Layer.Markers').length) {
+                Raindar.map.removeLayer(Raindar.map.getLayersByClass('OpenLayers.Layer.Markers')[0]);
             }
             var markers = new OpenLayers.Layer.Markers("Markers");
             var size = new OpenLayers.Size(21,25);
             var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
             var icon = new OpenLayers.Icon('assets/location-icon.png',size,offset);
-            markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(raindar.currentLocationLongitude, raindar.currentLocationLatitude).transform(raindar.olProjection, raindar.map.getProjectionObject()),icon));
-            raindar.map.addLayer(markers);
+            markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(Raindar.currentLocationLongitude, Raindar.currentLocationLatitude).transform(Raindar.olProjection, Raindar.map.getProjectionObject()),icon));
+            Raindar.map.addLayer(markers);
 
         },
         refreshData : function () {
-            var centerCoordinates = [raindar.currentLocationLongitude, raindar.currentLocationLatitude];
+            var centerCoordinates = [Raindar.currentLocationLongitude, Raindar.currentLocationLatitude];
             var defaultZoomLevel = 8;
             var centerLonLat = new OpenLayers.LonLat(centerCoordinates);
 
-            raindar.map.setCenter(
+            Raindar.map.setCenter(
                 centerLonLat.transform(
-                    raindar.olProjection,
-                    raindar.map.getProjectionObject()
+                    Raindar.olProjection,
+                    Raindar.map.getProjectionObject()
                 ),
                 defaultZoomLevel
             );
 
-            raindar.addMarkers();
+            Raindar.addMarkers();
 
-            forecastIO.gettingCurrentWeather(raindar.currentLocationLatitude, raindar.currentLocationLongitude).done(function(weather) {
+            forecastIO.gettingCurrentWeather(Raindar.currentLocationLatitude, Raindar.currentLocationLongitude).done(function(weather) {
                 var availableIcons = [
                     'clear-day',
                     'clear-night',
@@ -172,7 +162,7 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 var temperature = typeof weather.temperature !== 'undefined' ? parseInt(weather.temperature, 10) : '?';
 
                 // windBearing from forecast.io is the direction where the wind is coming from, so substract 180 degrees
-                jQuery('#info-location-time-wrapper .location').html(raindar.currentCity);
+                jQuery('#info-location-time-wrapper .location').html(Raindar.currentCity);
                 weather.windBearing = weather.windBearing - 90;
                 jQuery('#info-wind-speed').animate({ left: 0, top: 0 }, {
                     step: function(now, fx) {
@@ -194,33 +184,33 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
             // Define the Datapoint layer bounding box
             // OpenStreetMap is based on a different coordinate system so the Lat and Lon values need to be transformed into the correct projection
             var bounds = new OpenLayers.Bounds();
-            bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(raindar.olProjection, raindar.map.getProjectionObject()));
-            bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(raindar.olProjection, raindar.map.getProjectionObject()));
+            bounds.extend(new OpenLayers.LonLat(northWestBoundData).transform(Raindar.olProjection, Raindar.map.getProjectionObject()));
+            bounds.extend(new OpenLayers.LonLat(southEastBoundData).transform(Raindar.olProjection, Raindar.map.getProjectionObject()));
 
             // Get the Datapoint image
             var layerSize = new OpenLayers.Size(widthImageData, heightImageData);
 
             met.gettingURLsAndTimes().done(function(data) {
-                raindar.times = data.times;
-                jQuery.each(raindar.radarLayers, function(index, layer) {
-                    raindar.map.removeLayer(raindar.radarLayers[index]);
+                Raindar.times = data.times;
+                jQuery.each(Raindar.radarLayers, function(index, layer) {
+                    Raindar.map.removeLayer(Raindar.radarLayers[index]);
                 });
-                raindar.radarLayers = [];
+                Raindar.radarLayers = [];
                 jQuery.each(data.images_urls, function(index, url) {
-                    raindar.radarLayers[index] = new OpenLayers.Layer.Image(
+                    Raindar.radarLayers[index] = new OpenLayers.Layer.Image(
                         "Datapoint Composite Radar",
                         url,
                         bounds,
                         layerSize,
                         {isBaseLayer: false, opacity: 0.65}
                     );
-                    raindar.map.addLayer(raindar.radarLayers[index]);
-                    raindar.radarLayers[index].setVisibility(false);
+                    Raindar.map.addLayer(Raindar.radarLayers[index]);
+                    Raindar.radarLayers[index].setVisibility(false);
                 });
-                raindar.radarLayers[raindar.radarLayers.length -1].setVisibility(true);
-                raindar.layerAnimationCounter = raindar.radarLayers.length - 1;
-                jQuery('#info-location-time-wrapper .time').html(raindar.timeString(raindar.times[raindar.radarLayers.length - 1]));
-                jQuery('#info-location-time-wrapper .date').html(raindar.dateString(raindar.times[raindar.radarLayers.length - 1]));
+                Raindar.radarLayers[Raindar.radarLayers.length -1].setVisibility(true);
+                Raindar.layerAnimationCounter = Raindar.radarLayers.length - 1;
+                jQuery('#info-location-time-wrapper .time').html(Raindar.timeString(Raindar.times[Raindar.radarLayers.length - 1]));
+                jQuery('#info-location-time-wrapper .date').html(Raindar.dateString(Raindar.times[Raindar.radarLayers.length - 1]));
             });
         },
         bindEvents : function () {
@@ -244,16 +234,16 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 var wrapper = jQuery(this).parent();
                 wrapper.removeClass('satellite');
                 wrapper.addClass('map');
-                raindar.googleMapsLayerStreet.setVisibility(true);
-                raindar.googleMapsLayerSatellite.setVisibility(false);
+                Raindar.googleMapsLayerStreet.setVisibility(true);
+                Raindar.googleMapsLayerSatellite.setVisibility(false);
             });
 
             jQuery('a.button-to-satellite').on('click', function() {
                 var wrapper = jQuery(this).parent();
                 wrapper.removeClass('map');
                 wrapper.addClass('satellite');
-                raindar.googleMapsLayerSatellite.setVisibility(true);
-                raindar.googleMapsLayerStreet.setVisibility(false);
+                Raindar.googleMapsLayerSatellite.setVisibility(true);
+                Raindar.googleMapsLayerStreet.setVisibility(false);
             });
 
             jQuery('#button-about').on('click', function() {
@@ -264,23 +254,23 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
                 var $play_button = jQuery(this);
                 if ($play_button.hasClass('playing')) {
                     $play_button.removeClass('playing');
-                    clearInterval(raindar.layerAnimationInterval);
+                    clearInterval(Raindar.layerAnimationInterval);
                     return false;
                 }
                 $play_button.addClass('playing');
 
-                var layersNumber = raindar.radarLayers.length - 1;
+                var layersNumber = Raindar.radarLayers.length - 1;
 
-                raindar.layerAnimationInterval = setInterval(
+                Raindar.layerAnimationInterval = setInterval(
                     function() {
-                        var isCurrentFrameLast = (raindar.layerAnimationCounter === layersNumber);
-                        var nextLayer = isCurrentFrameLast ? 0 : raindar.layerAnimationCounter + 1;
-                        raindar.radarLayers[raindar.layerAnimationCounter].setVisibility(false);
-                        raindar.radarLayers[nextLayer].setVisibility(true);
-                        jQuery('#info-location-time-wrapper .time').html(raindar.timeString(raindar.times[nextLayer]));
-                        jQuery('#info-location-time-wrapper .date').html(raindar.dateString(raindar.times[nextLayer]));
-                        raindar.layerAnimationCounter = nextLayer;
-                        if (raindar.layerAnimationCounter === layersNumber) {
+                        var isCurrentFrameLast = (Raindar.layerAnimationCounter === layersNumber);
+                        var nextLayer = isCurrentFrameLast ? 0 : Raindar.layerAnimationCounter + 1;
+                        Raindar.radarLayers[Raindar.layerAnimationCounter].setVisibility(false);
+                        Raindar.radarLayers[nextLayer].setVisibility(true);
+                        jQuery('#info-location-time-wrapper .time').html(Raindar.timeString(Raindar.times[nextLayer]));
+                        jQuery('#info-location-time-wrapper .date').html(Raindar.dateString(Raindar.times[nextLayer]));
+                        Raindar.layerAnimationCounter = nextLayer;
+                        if (Raindar.layerAnimationCounter === layersNumber) {
                             if ($play_button.hasClass('playing')) {
                                 jQuery('#button-play').trigger('click');
                             }
@@ -291,7 +281,7 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
 
             jQuery('#button-refresh-data, .info-location-time-text').on('click', function() {
                 localStorage.clear();
-                raindar.gettingCurrentLocation().then(raindar.refreshData);
+                Raindar.gettingCurrentLocation().then(Raindar.refreshData);
             });
 
             jQuery('#about-screen .close').on('click', function() {
@@ -306,5 +296,5 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function(jQuery, 
 
         }
     };
-    return raindar;
+    return Raindar;
 });
