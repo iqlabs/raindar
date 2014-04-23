@@ -31,8 +31,4 @@ To build the application for production deployment
 
 ### Run from development
 
-Run index-dev.html
-
-### Run concatenated and uglified production version
-
-Run build/index.html
+Run index.html from the project root directory.
