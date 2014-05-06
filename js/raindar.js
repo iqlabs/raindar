@@ -72,6 +72,13 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function (jQuery,
                 })
                 .always(Raindar.setUpMap);
         },
+        reverseGeocode: function () {
+            geocoding.gettingCity(Raindar.currentLocationLatitude, Raindar.currentLocationLongitude)
+                .done(function (city) {
+                    Raindar.currentCity = city;
+                    jQuery('#info-location-time-wrapper .location').html(Raindar.currentCity);
+                });
+        },
         setUpMap: function () {
             var projection = 'EPSG:4326';
             Raindar.olProjection = new OpenLayers.Projection(projection);
@@ -285,7 +292,7 @@ define(['jQuery', 'google', 'geocoding', 'forecastIO', 'met'], function (jQuery,
 
             jQuery('#button-refresh-data, .info-location-time-text').on('click', function () {
                 localStorage.clear();
-                Raindar.gettingCurrentLocation().then(Raindar.refreshData);
+                Raindar.gettingCurrentLocation().then(Raindar.reverseGeocode).then(Raindar.refreshData);
             });
 
             jQuery('#about-screen .close').on('click', function () {
