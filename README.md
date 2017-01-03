@@ -8,12 +8,12 @@ Since 2008 a steady stream of friends & colleagues used the tool. Despite more c
 
 With version 2 of the Raindar, we strove to keep its simpilicity whilst enhancing its functionality, to allow zooming and panning of the map. We've also widened the rain radar feeds to cover Britain.
 
-Ciarán (UX), Mario & Nick (Dev), & Amanda (Graphic design) at iQ Content did this exploration as part of iQ Labs.
+Raindar was a little experiment by Ciarán Harris, Mario Ferraro, Nick Rogers & Amanda Andreza Coelho.
 
 ## Installation
 Clone from Github
 
-`clone git@github.com:iqlabs/raindar.git`
+`clone git@github.com:EachAndOther-Labs/raindar.git`
 
 Install node modules in root directory
 
