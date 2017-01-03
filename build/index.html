@@ -7,6 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
     <link href='http://fonts.googleapis.com/css?family=Arvo|Arvo:700' rel='stylesheet' type='text/css'>
+      <script type="text/javascript">
+          function scrollToTheTop () {
+              window.scrollTo (0,1);
+          }
+      </script>
       <script type="text/javascript" src="third_party/openlayers/lib/OpenLayers.js"></script>
       <script type="text/javascript" data-main="js/main" src="third_party/requirejs/require.js"></script>
       <!--<script type="text/javascript" data-main="raindar" src="js/raindar.js"></script>-->
@@ -15,18 +20,8 @@
       <!-- @if NODE_ENV != 'production' -->
       <link type="text/css" rel="stylesheet" href="raindar.css" />
     <!-- @endif -->
-      <!-- Google Tag Manager -->
-      <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KRFMLT"
-                        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-KRFMLT');</script>
-      <!-- End Google Tag Manager -->
-      <link rel="apple-touch-icon" href="http://www.raindar.ie/assets/cloud-icon.png" />
   </head>
-  <body>
+  <body onload="scrollToTheTop()">
     <div id="menu-bar">
       <div id="info-wind-speed-wrapper" class="wrapper">
         <div id="info-wind-speed" class="image"></div><span class="info-wind-speed-text text">? km/h</span>
@@ -62,7 +57,7 @@
     <div id="button-about" class="image"></div>
     <div id="map">
       <noscript>
-        Alternative static content goes here
+        Turn on yer javascript you weirdo!
       </noscript>
     </div>
     <div id="about-screen-mask">
@@ -71,11 +66,10 @@
       <div id="about-screen-text">
         <div class="close"></div>
         <h1>About the Raindar</h1>
-        <p><a href="http://iqcontent.com/people/the-team/ciaran-harris/">Ciarán</a> conceived and built the original Raindar as a tool to quickly let him see if he could avoid getting wet on a motorcycle journey.</p>
+        <p><a href="https://ie.linkedin.com/in/ciaranharris">Ciarán</a> conceived and built the original Raindar as a tool to quickly let him see if he could avoid getting wet on a motorcycle journey.</p>
         <p>Since 2008 a steady stream of friends &amp; colleagues used the tool. Despite more comprehensive tools being available, the Raindar's simplicity &amp; single mindedness proved important.</p>
         <p>With version 2 of the Raindar, we strove to keep its simpilicity whilst enhancing its functionality, to allow zooming and panning of the map. We've also widened the rain radar feeds to cover Britain.</p>
-        <p>Ciarán, Mario, Nick &amp; Amanda at <a href="http://www.iqcontent.com">iQ Content</a> did this exploration as part of <a href="http://iqcontent.com/people/how-we-give-back/">iQ Labs</a>.</p>
-        <div class="iqlabs-logo"></div>
+        <p>Raindar was a little experiment by <a href="https://ie.linkedin.com/in/ciaranharris">Ciarán Harris</a>, <a href="https://ie.linkedin.com/in/ferraromario">Mario Ferraro</a>, <a href="https://ie.linkedin.com/in/nick-rogers-0aa472b">Nick Rogers</a> &amp; <a href="https://br.linkedin.com/in/amanda-andreza-coelho-83881847/en">Amanda Andreza Coelho</a>.</p>
       </div>
     </div>
   </body>
