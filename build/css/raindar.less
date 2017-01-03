@@ -1,0 +1,364 @@
+@import 'reset';
+
+@assets-directory: 'assets';
+@image-windspeed: '@{assets-directory}/windspeed-indicator-up.png';
+@image-weather-unknown: '@{assets-directory}/weather-unknown.png';
+@image-temperature: '@{assets-directory}/temperature-icon.png';
+@image-mapOn: '@{assets-directory}/toggle-map-on--satellite-off.png';
+@image-satOn: '@{assets-directory}/toggle-map-off--satellite-on.png';
+@image-play: '@{assets-directory}/play-icon.png';
+@image-pause: '@{assets-directory}/pause-button.png';
+@image-about: '@{assets-directory}/_info-icon.png';
+@image-zoom-idle: '@{assets-directory}/zoom.png';
+@image-zoom-in: '@{assets-directory}/zoom-in-button.png';
+@image-zoom-out: '@{assets-directory}/zoom-out-button.png';
+@image-refresh: '@{assets-directory}/refresh-icon.png';
+@image-about-close: '@{assets-directory}/x.png';
+@image-iqlabs: '@{assets-directory}/lab-logo.png';
+
+.basic-style () {
+  background: rgba(218, 218, 218, 0.8);
+  background: -moz-linear-gradient(270deg, rgba(218, 218, 218, 0.8) 0%, rgba(255, 255, 255, 0.8) 73%);
+  background: -webkit-linear-gradient(270deg, rgba(218, 218, 218, 0.8) 0%, rgba(255, 255, 255, 0.8) 73%);
+  background: -o-linear-gradient(270deg, rgba(218, 218, 218, 0.8) 0%, rgba(255, 255, 255, 0.8) 73%);
+  background: -ms-linear-gradient(270deg, rgba(218, 218, 218, 0.8) 0%, rgba(255, 255, 255, 0.8) 73%);
+  background: linear-gradient(0deg, rgba(218, 218, 218, 0.8) 0%, rgba(255, 255, 255, 0.8) 73%);
+  color: #444444;
+  font-family: 'Arvo', serif;
+}
+
+.bars () {
+  .basic-style;
+  height: 35px;
+  font-weight: 700;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  white-space: nowrap;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+#menu-bar {
+  .bars;
+  font-size: 0.8em;
+  * {
+    display: inline-block;
+  }
+  .text {
+    vertical-align: middle;
+  }
+  .image {
+    background-position: left center;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+  }
+  .wrapper {
+    padding-top: 5px;
+  }
+  #info-wind-speed-wrapper {
+    width: 30%;
+    padding-left: 10px;
+    text-align: left;
+    #info-wind-speed {
+      background-image: url('@{image-windspeed}');
+      height: 25px;
+      width: 25px;
+    }
+    .text {
+        margin-left: 2px;
+    }
+  }
+  #info-weather-wrapper {
+    text-align: left;
+    width: 10%;
+    #info-weather {
+      background-image: url('@{image-weather-unknown}');
+      height: 23px;
+      width: 23px;
+    }
+    .text {
+      margin-left: 2px;
+    }
+  }
+  #info-temperature-wrapper {
+    text-align: center;
+    width: 18%;
+    #info-temperature {
+      background-image: url('@{image-temperature}');
+      height: 23px;
+      width: 9px;
+    }
+    .text {
+      margin-left: 2px;
+    }
+  }
+  #button-change-map-view-wrapper {
+    top: 0px;
+    right: 10px;
+    position: absolute;
+    min-width: 73px;
+    #button-change-map-view {
+      .button-to-map {
+        height: 33px;
+        width: 36px;
+      }
+      .button-to-satellite {
+        height: 33px;
+        width: 36px;
+      }
+      a:hover {
+        cursor: pointer;
+      }
+      &.map {
+        background-image: url('@{image-mapOn}');
+        height: 33px;
+        width: 73px;
+      }
+      &.satellite {
+        background-image: url('@{image-satOn}');
+        height: 33px;
+        width: 73px;
+      }
+    }
+  }
+}
+
+#playback-bar {
+  .bars;
+  bottom: 0;
+  font-size: 1em;
+  * {
+    display: inline-block;
+  }
+  .image {
+    background-position: left center;
+    background-repeat: no-repeat;
+  }
+  #button-play-wrapper {
+    position: absolute;
+    left: 10px;
+    #button-play {
+      background-image: url('@{image-play}');
+      padding-top: 10px;
+      height: 22px;
+      width: 22px;
+      &.playing {
+        background-image: url('@{image-pause}');
+      }
+    }
+  }
+  #info-location-time-wrapper {
+    width: 100%;
+    text-align: center;
+    line-height: 32px;
+    vertical-align: middle;
+    div {
+      margin-right: 1px;
+    }
+    .info-location-time-text.location, .info-location-time-text.date {
+      font-size: 0.7em;
+    }
+  }
+  #button-refresh-data {
+    background-image: url('@{image-refresh}');
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    height: 23px;
+    width: 23px;
+    z-index: 999;
+  }
+}
+#button-about {
+  position: absolute;
+  right: 10px;
+//  top: 10px;
+  background-image: url('@{image-about}');
+  height: 22px;
+  width: 22px;
+  z-index: 999;
+  right: 10px;
+  bottom: 52px;
+
+}
+
+#button-zoom {
+  background-image: url('@{image-zoom-idle}');
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  height: 56px;
+  width: 26px;
+  z-index: 999;
+  a:hover {
+    cursor: pointer;
+  }
+  &.in {
+    background-image: url('@{image-zoom-in}');
+  }
+  &.out {
+    background-image: url('@{image-zoom-out}');
+  }
+  .button-zoom-in {
+    height: 28px;
+    width: 26px;
+    position: absolute;
+  }
+  .button-zoom-out {
+    height: 28px;
+    top: 28px;
+    width: 26px;
+    position: absolute;
+  }
+}
+
+#about-screen-mask{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  display: none;
+  background-color: black;
+  opacity: 0.7;
+  z-index: 1000;
+}
+#about-screen {
+  .basic-style;
+  font-weight: 400;
+  border: 3px solid #CCCCCC;
+  display: none;
+  position: absolute;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 0.7em;
+  line-height: 1.4;
+  top: 4%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  overflow: auto;
+  z-index: 1001;
+  @media screen and (min-width: 30em) {
+    font-size: 0.9em;
+    top: 15%;
+    overflow: auto;
+    height: 70%;
+  }
+  @media screen and (min-width: 60em) {
+    font-size: 1.2em;
+    left: 10%;
+    top: 15%;
+    width: 80%;
+  }
+  #about-screen-text {
+    padding: 5%;
+  }
+  h1 {
+    margin-bottom: 10px;
+    font-size: 1em;
+    font-weight: 700;
+    @media screen and (min-width: 30em) {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+    @media screen and (min-width: 60em) {
+      font-size: 2em;
+      margin-bottom: 40px;
+    }
+  }
+  p {
+    margin-bottom: 10px;
+    @media screen and (min-width: 30em) {
+      margin-bottom: 20px;
+    }
+    @media screen and (min-width: 60em) {
+      margin-bottom: 30px;
+    }
+  }
+  a {
+    &:link {
+      font-weight: 700;
+      color: black;
+    }
+    &:visited {
+      font-weight: 700;
+      color: black;
+    }
+  }
+  .close {
+    background-image: url('@{image-about-close}');
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 23px;
+    width: 23px;
+    @media screen and (min-width: 60em) {
+      top: 20px;
+      right: 20px;
+    }
+  }
+  .iqlabs-logo {
+    background-image: url('@{image-iqlabs}');
+    float: right;
+    height: 58px;
+    width: 121px;
+  }
+}
+
+@media screen and (max-width: 20em) {
+  #info-wind-speed-wrapper {
+    width: 25%;
+  }
+
+  #info-weather-wrapper {
+    width: 15%;
+  }
+
+  #info-temperature-wrapper {
+    width: 14%;
+  }
+
+}
+
+@media screen and (min-width: 60em) {
+  #menu-bar {
+    font-size: 1em;
+    position: absolute;
+    right: 0;
+    width: 33%;
+    #info-weather-wrapper {
+      width: 15%;
+    }
+    #info-temperature-wrapper {
+      width: 15%;
+    }
+  }
+
+  #playback-bar {
+    bottom: auto;
+    width: 33%;
+  }
+
+  #button-about {
+    top: 10px;
+    left: 35%;
+    z-index: 999;
+  }
+}
