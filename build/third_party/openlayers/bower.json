@@ -1,0 +1,8 @@
+{
+  "name": "openlayers",
+  "version": "v2.13.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/openlayers/openlayers.git"
+  }
+}

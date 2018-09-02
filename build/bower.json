@@ -1,0 +1,13 @@
+{
+  "name": "Raindar",
+  "version": "1.9.1",
+  "dependencies": {
+    "jquery": "~2.0.0",
+    "requirejs": "~2.1.6",
+    "requirejs-plugins": "~1.0.2",
+    "openlayers": "~2.13.1"
+  },
+  "devDependencies": {
+    "openlayers": "~2.13.1"
+  }
+}
